@@ -1,0 +1,1006 @@
+/* ============================================================
+   SIGNAL — near-black ground, condensed display type at scale,
+   lime signal, technical monospace metadata, cinematic motion.
+   ============================================================ */
+
+.sg-root {
+  --sg-gutter: clamp(20px, 4vw, 40px);
+  position: relative;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+}
+
+.sg-root a:hover {
+  color: var(--accent);
+}
+
+/* ---------- shared signal atoms ---------- */
+
+.sg-section-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.sg-section-label--ink {
+  color: var(--on-accent-ink);
+}
+
+/* ---------- navigation ---------- */
+
+.sg-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 20;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 22px var(--sg-gutter);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  mix-blend-mode: difference;
+}
+
+.sg-nav__mark {
+  color: var(--foreground);
+  font-weight: 600;
+}
+
+.sg-nav__links {
+  display: flex;
+  gap: clamp(14px, 3vw, 28px);
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .sg-nav {
+    padding: 16px var(--sg-gutter);
+    font-size: 10px;
+  }
+}
+
+/* ---------- bottom chapter rail ---------- */
+
+.sg-rail {
+  position: fixed;
+  inset: auto 0 0 0;
+  z-index: 20;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  padding: 0 var(--sg-gutter);
+  border-top: 1px solid var(--border);
+  background: var(--background);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+/* The chapter list grows with the project data, so it absorbs every shortfall
+   and scrolls; the ticker keeps a fixed share rather than being squeezed to a
+   useless sliver. The right-edge fade is the affordance that there is more. */
+.sg-rail__chapters {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  gap: 28px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  mask-image: linear-gradient(90deg, #000 calc(100% - 36px), transparent);
+}
+
+.sg-rail__chapters::-webkit-scrollbar {
+  display: none;
+}
+
+.sg-rail__chapter {
+  white-space: nowrap;
+  transition: color 0.3s var(--ease);
+}
+
+.sg-rail__chapter[aria-current="true"] {
+  color: var(--accent);
+}
+
+.sg-rail__ticker {
+  flex: 0 0 clamp(200px, 22vw, 380px);
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
+}
+
+.sg-rail__ticker-track {
+  display: flex;
+  width: max-content;
+  color: var(--muted);
+  animation: sgTicker 30s linear infinite;
+}
+
+.sg-rail__ticker-group {
+  display: flex;
+  gap: 28px;
+  padding-right: 28px;
+}
+
+@keyframes sgTicker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Below this the rail needs the whole bar for its own chapters. */
+@media (max-width: 1100px) {
+  .sg-rail__ticker {
+    display: none;
+  }
+  .sg-rail {
+    gap: 0;
+  }
+}
+
+/* ---------- hero ---------- */
+
+.sg-hero {
+  /* How far up the frame the legibility scrim reaches. */
+  --sg-scrim: 58%;
+  position: relative;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 120px var(--sg-gutter) clamp(80px, 12vh, 110px);
+  overflow: hidden;
+}
+
+.sg-hero__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The mesh reads as depth behind the type, not as texture across it. */
+.sg-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    var(--background) 0%,
+    color-mix(in oklab, var(--background) 78%, transparent) calc(var(--sg-scrim) * 0.55),
+    transparent var(--sg-scrim)
+  );
+}
+
+.sg-hero__inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  align-items: end;
+}
+
+.sg-hero__eyebrow {
+  grid-column: 1 / -1;
+  margin: 0 0 20px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--subtle);
+}
+
+.sg-hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(84px, min(17vw, 34vh), 260px);
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.sg-hero__line {
+  display: block;
+  animation: sgRise 1.1s var(--ease) both;
+}
+
+/* The surname is drawn, not filled — the outline is the hero's second voice. */
+.sg-hero__line--outline {
+  color: transparent;
+  -webkit-text-stroke: clamp(1px, 0.16vw, 2px) var(--foreground);
+  animation-delay: 0.12s;
+}
+
+.sg-hero__aside {
+  padding-bottom: 18px;
+  animation: sgRise 1.1s 0.25s var(--ease) both;
+}
+
+.sg-hero__lede {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--accent-secondary);
+}
+
+.sg-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+  padding: 14px 20px;
+  background: var(--accent);
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    transform 0.3s var(--ease),
+    background-color 0.3s var(--ease);
+}
+
+.sg-hero__cta:hover {
+  color: var(--on-accent);
+  transform: translateX(4px);
+}
+
+@keyframes sgRise {
+  from {
+    opacity: 0;
+    transform: translateY(var(--travel));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .sg-hero {
+    /* One column means the type sits over the densest part of the mesh. */
+    --sg-scrim: 96%;
+  }
+  .sg-hero__inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .sg-hero__aside {
+    padding-bottom: 0;
+  }
+  .sg-hero__lede {
+    font-size: 15px;
+    max-width: 34ch;
+  }
+}
+
+/* ---------- work ---------- */
+
+.sg-work {
+  position: relative;
+  border-top: 1px solid var(--border);
+}
+
+.sg-work__timeline {
+  position: absolute;
+  left: var(--sg-gutter);
+  right: var(--sg-gutter);
+  top: 92px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--subtle);
+  pointer-events: none;
+}
+
+.sg-work__progress {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.sg-work__progress-fill {
+  display: block;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.sg-work__hint {
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+.sg-work__track {
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 900px) {
+  .sg-work {
+    height: 100vh;
+    overflow: hidden;
+  }
+  .sg-work__track {
+    flex-direction: row;
+    height: 100vh;
+    width: max-content;
+    will-change: transform;
+  }
+}
+
+/* ---------- project chapter ---------- */
+
+.sg-project {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+  padding: clamp(90px, 16vh, 150px) var(--sg-gutter) 80px;
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.sg-project:nth-child(even) {
+  background: var(--surface);
+}
+
+@media (min-width: 900px) {
+  .sg-project {
+    width: 100vw;
+    height: 100vh;
+    flex: none;
+    /* A chapter owns the whole frame, so its columns span it rather than
+       floating a half-height block in the middle — that slack was the empty
+       band left behind as the last chapter scrolled away. */
+    align-items: stretch;
+    border-top: 0;
+    border-left: 1px solid var(--border);
+  }
+
+  .sg-project__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The device stays optically centred against that full-height column. */
+  .sg-project__visual {
+    align-self: center;
+  }
+}
+
+/* The oversized numeral sits behind the chapter as a page mark. */
+.sg-project__ghost {
+  position: absolute;
+  left: -14px;
+  top: 40px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(200px, 32vw, 440px);
+  line-height: 1;
+  color: var(--surface-alt);
+  pointer-events: none;
+  user-select: none;
+}
+
+.sg-project__body {
+  position: relative;
+}
+
+.sg-project__meta {
+  display: flex;
+  gap: 16px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sg-project__kind {
+  color: var(--accent);
+}
+
+.sg-project__year {
+  color: var(--subtle);
+}
+
+.sg-project__title {
+  margin: 12px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(44px, min(9vw, 16vh), 140px);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.sg-project__desc {
+  margin: 16px 0 0;
+  max-width: 460px;
+  font-size: clamp(14px, 2.6vh, 17px);
+  line-height: 1.5;
+  color: var(--accent-secondary);
+}
+
+.sg-project__stats {
+  margin: 18px 0 0;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: clamp(16px, 3vw, 28px);
+  justify-content: start;
+}
+
+.sg-project__stat-value {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: min(40px, 6vh);
+  line-height: 1;
+}
+
+.sg-project__stat-label {
+  margin-top: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+.sg-project__stack {
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.sg-project__stack li {
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  padding: 5px 9px;
+}
+
+.sg-project__links {
+  margin: 20px 0 0;
+  display: flex;
+  gap: 28px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.sg-project__link {
+  padding-bottom: 3px;
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--muted);
+}
+
+.sg-project__link--primary {
+  color: var(--accent);
+  border-bottom-color: currentColor;
+}
+
+.sg-project__link--pending {
+  color: var(--subtle);
+  border-bottom-style: dashed;
+}
+
+.sg-project__visual {
+  /* Height budget for a screenshot; the window's width is derived from it. */
+  --sg-shot-h: 52vh;
+  position: relative;
+  perspective: 1200px;
+}
+
+.sg-project__device {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  background: repeating-linear-gradient(135deg, #1a1a1e 0 8px, #141417 8px 16px);
+  box-shadow:
+    40px 60px 90px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04),
+    -1px 0 0 var(--accent);
+  transform: rotateY(-18deg) rotateX(6deg);
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--ease);
+}
+
+.sg-project:hover .sg-project__device,
+.sg-project:focus-within .sg-project__device {
+  transform: rotateY(-6deg) rotateX(2deg);
+}
+
+.sg-project__chrome {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border);
+  background: #0f0f12;
+}
+
+.sg-project__chrome > span[aria-hidden="true"] {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+
+.sg-project__url {
+  margin-left: 12px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sg-project__screen {
+  position: relative;
+  /* Default shape for a project with no interface to show; a project with one
+     overrides this with the capture's own ratio. */
+  aspect-ratio: 16 / 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Screenshots are full-width page captures at assorted ratios; anchoring the
+   crop to the top keeps the masthead and headline, which is what identifies
+   the product at this size. */
+.sg-project__shot {
+  object-fit: contain;
+  object-position: center;
+  /* Slightly cooled so the chapter's own colour still leads. */
+  filter: saturate(0.92) contrast(1.02);
+  transition: filter 0.6s var(--ease);
+}
+
+.sg-project:hover .sg-project__shot,
+.sg-project:focus-within .sg-project__shot {
+  filter: none;
+}
+
+.sg-project__no-shot {
+  margin: 0;
+  padding: 24px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--subtle);
+}
+
+.sg-project__caption {
+  margin: 26px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  line-height: 1.6;
+  color: var(--subtle);
+}
+
+@media (max-width: 900px) {
+  .sg-project {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 96px;
+  }
+  .sg-project__ghost {
+    font-size: clamp(140px, 44vw, 260px);
+    top: 16px;
+    opacity: 0.85;
+  }
+  .sg-project__device {
+    transform: none;
+  }
+  .sg-project__stats {
+    gap: 20px;
+  }
+  .sg-work__timeline {
+    top: 60px;
+  }
+  .sg-work__hint {
+    display: none;
+  }
+}
+
+@media (max-width: 520px) {
+  .sg-project__stats {
+    grid-template-columns: repeat(2, auto);
+  }
+  .sg-project__links {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+
+/* ---------- about ---------- */
+
+.sg-about {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+  padding: clamp(80px, 12vh, 110px) var(--sg-gutter) 100px;
+  border-top: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.sg-about__ghost {
+  position: absolute;
+  left: -14px;
+  top: 40px;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(200px, 32vw, 440px);
+  line-height: 1;
+  color: var(--surface-alt);
+  pointer-events: none;
+  user-select: none;
+}
+
+.sg-about__body {
+  position: relative;
+}
+
+.sg-about__title {
+  margin: 18px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(56px, 8vw, 120px);
+  line-height: 0.85;
+  text-transform: uppercase;
+}
+
+.sg-about__bio {
+  margin: 26px 0 0;
+  max-width: 460px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--accent-secondary);
+}
+
+.sg-about__timeline {
+  margin: 34px 0 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px 24px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.sg-about__row {
+  display: contents;
+}
+
+.sg-about__timeline dt {
+  color: var(--subtle);
+  white-space: nowrap;
+}
+
+.sg-about__timeline dd {
+  margin: 0;
+}
+
+.sg-about__current {
+  color: var(--accent);
+}
+
+.sg-about__figure {
+  position: relative;
+  margin: 0;
+  display: grid;
+  gap: 16px;
+  max-width: 520px;
+}
+
+.sg-about__portrait {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 25%;
+  border: 1px solid var(--border-strong);
+  filter: grayscale(1) contrast(1.15);
+  transition: filter 0.6s var(--ease);
+}
+
+.sg-about__figure:hover .sg-about__portrait {
+  filter: none;
+}
+
+.sg-about__caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--subtle);
+}
+
+@media (max-width: 900px) {
+  .sg-about {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .sg-about__bio {
+    font-size: 16px;
+  }
+}
+
+/* ---------- contact ---------- */
+
+.sg-contact {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+  padding: clamp(80px, 12vh, 110px) var(--sg-gutter) 120px;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.sg-contact a:hover {
+  color: var(--on-accent-ink);
+}
+
+.sg-contact__title {
+  margin: 18px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(96px, 18vw, 300px);
+  line-height: 0.8;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.sg-contact__lede {
+  margin: 30px 0 0;
+  max-width: 420px;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--on-accent-ink);
+}
+
+.sg-contact__links {
+  margin: 40px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--on-accent-ink);
+}
+
+.sg-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 560px;
+  padding-top: 40px;
+}
+
+.sg-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-accent-ink);
+}
+
+.sg-form__field input,
+.sg-form__field textarea {
+  border: 0;
+  border-bottom: 2px solid var(--on-accent);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 22px;
+  color: var(--on-accent);
+  padding: 8px 0;
+  outline: none;
+}
+
+.sg-form__field textarea {
+  font-size: 18px;
+  line-height: 1.4;
+  resize: vertical;
+}
+
+.sg-form__field :is(input, textarea):focus-visible {
+  outline: 2px solid var(--on-accent);
+  outline-offset: 4px;
+}
+
+.sg-form__kinds {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sg-form__kinds legend {
+  padding: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--on-accent-ink);
+}
+
+.sg-form__kind-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.sg-form__kind {
+  cursor: pointer;
+  padding: 9px 14px;
+  border: 1.5px solid var(--on-accent);
+  background: transparent;
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
+}
+
+.sg-form__kind[aria-pressed="true"] {
+  background: var(--on-accent);
+  color: var(--accent);
+}
+
+.sg-form__submit {
+  align-self: flex-start;
+  margin-top: 8px;
+  border: 0;
+  cursor: pointer;
+  padding: 16px 24px;
+  background: var(--on-accent);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: transform 0.25s var(--ease);
+}
+
+.sg-form__submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.sg-form__submit:disabled {
+  cursor: progress;
+  opacity: 0.65;
+}
+
+/* Empty while idle, so the form does not reserve a gap for a message that is
+   not there; it takes its space only once there is something true to say. */
+.sg-form__status {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--on-accent-ink);
+}
+
+.sg-form__status:empty {
+  display: none;
+}
+
+.sg-form__status[data-state="error"] {
+  padding-left: 12px;
+  border-left: 2px solid var(--on-accent);
+  font-weight: 500;
+}
+
+.sg-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 60px;
+  padding-bottom: 44px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--on-accent-ink);
+}
+
+@media (max-width: 900px) {
+  .sg-contact {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    min-height: 0;
+  }
+  .sg-form {
+    padding-top: 0;
+  }
+  .sg-contact__title {
+    font-size: clamp(72px, 24vw, 140px);
+  }
+}
+
+/* Verifiable credentials — underlined so they read as links against the mono
+   credential rows, which are otherwise not interactive. */
+.sg-about__cert {
+  border-bottom: 1px solid var(--border-strong);
+  padding-bottom: 1px;
+}
+
+.sg-about__cert:hover {
+  color: var(--accent);
+  border-bottom-color: currentColor;
+}
+
+/* Anchors the chapter's calls to action to the foot of its full-height column.
+   Declared here, after `.sg-project__links`'s own margin shorthand, because a
+   media query carries no extra specificity — only source order wins. */
+@media (min-width: 900px) {
+  .sg-project__links {
+    margin-top: auto;
+    /* A hairline turns the anchored actions into a deliberate footer band
+       rather than a block floating above dead space. */
+    padding-top: 22px;
+    border-top: 1px solid var(--border);
+  }
+}

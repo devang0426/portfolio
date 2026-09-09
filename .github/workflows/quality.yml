@@ -1,0 +1,39 @@
+name: quality
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run build
+
+      # Lighthouse runs from the action's own environment rather than a project
+      # devDependency: @lhci/cli drags in a large, chronically vulnerable
+      # transitive tree, and none of it belongs in the install of a site whose
+      # runtime dependencies are three packages.
+      - name: Lighthouse
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          configPath: ./lighthouserc.json
+          temporaryPublicStorage: false
+
+      - name: Upload Lighthouse reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse
+          path: .lighthouseci
+          if-no-files-found: ignore

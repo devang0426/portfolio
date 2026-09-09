@@ -1,0 +1,1028 @@
+/* ============================================================
+   BLUEPRINT — warm paper on a drafting grid, editorial grotesk
+   with a serif accent, figure numbers, mechanical motion.
+   ============================================================ */
+
+.bp-root {
+  --bp-gutter: clamp(20px, 3.4vw, 40px);
+  --bp-rail: 64px;
+  --bp-stick: 96px;
+  position: relative;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  /* The drafting grid is the ground the whole aesthetic sits on. */
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 40px 40px;
+  transition:
+    background-color 0.5s var(--ease),
+    color 0.5s var(--ease);
+}
+
+.bp-root a:hover {
+  color: var(--accent);
+}
+
+.bp-main {
+  padding-left: var(--bp-rail);
+}
+
+/* ---------- shared blueprint atoms ---------- */
+
+.bp-serif {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--accent);
+}
+
+.bp-figure-label {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.bp-eyebrow {
+  margin: 0 0 22px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.bp-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 18px;
+  border-radius: 4px;
+  background: var(--foreground);
+  color: var(--background);
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    background-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.bp-button:hover {
+  color: var(--background);
+  transform: translateY(-1px);
+}
+
+/* ---------- rail ---------- */
+
+.bp-rail {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--bp-rail);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px 0;
+  border-right: 1px solid var(--border);
+  background: var(--background);
+}
+
+.bp-rail__mark {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.bp-rail__figures {
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bp-rail__figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bp-rail__dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: 1.5px solid var(--foreground);
+  border-radius: 50%;
+  background: transparent;
+  transition: background-color 0.3s var(--ease);
+}
+
+.bp-rail__figure[aria-current="true"] .bp-rail__dot {
+  background: var(--foreground);
+}
+
+.bp-rail__tick {
+  display: block;
+  width: 1px;
+  height: 30px;
+  background: var(--border);
+}
+
+.bp-rail__lamp {
+  cursor: pointer;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--foreground);
+  border-radius: 50%;
+  background: none;
+}
+
+.bp-rail__lamp-dot {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid var(--foreground);
+  background: transparent;
+}
+
+.bp-rail__lamp[aria-pressed="true"] .bp-rail__lamp-dot {
+  background: var(--foreground);
+}
+
+.bp-rail__index {
+  margin: 14px 0 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+/* ---------- top bar ---------- */
+
+.bp-topbar {
+  position: fixed;
+  top: 0;
+  left: var(--bp-rail);
+  right: 0;
+  z-index: 20;
+  display: flex;
+  /* The document header used to spread a filename, the nav and a status chip
+     across the sheet. With only the nav left there is nothing to spread, so it
+     sits to the right where the rest of the right-hand column lives. */
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
+  padding: 22px var(--bp-gutter);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  background: linear-gradient(var(--background) 62%, transparent);
+}
+
+.bp-topbar__links {
+  display: flex;
+  gap: 28px;
+  white-space: nowrap;
+}
+
+.bp-topbar__link--strong {
+  color: var(--foreground);
+}
+
+/* ---------- mobile chrome: the rail lies down ---------- */
+
+@media (max-width: 860px) {
+  .bp-root {
+    --bp-rail: 0px;
+    --bp-stick: 76px;
+  }
+
+  .bp-rail {
+    inset: auto 0 0 0;
+    top: auto;
+    width: auto;
+    height: 52px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--bp-gutter);
+    border-right: 0;
+    border-top: 1px solid var(--border);
+  }
+
+  .bp-rail__figures {
+    margin: 0;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .bp-rail__figure {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .bp-rail__tick {
+    width: 22px;
+    height: 1px;
+  }
+
+  .bp-rail__index {
+    display: none;
+  }
+
+  .bp-main {
+    padding-bottom: 52px;
+  }
+
+  /* The nav was hidden here only because the bar also carried a filename and a
+     status chip. With those gone it fits, and Blueprint stops being the one
+     aesthetic with no labelled section links on a phone. */
+  .bp-topbar__links {
+    gap: 16px;
+  }
+
+  .bp-topbar {
+    padding: 16px var(--bp-gutter);
+  }
+}
+
+/* ---------- hero ---------- */
+
+.bp-hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(320px, 1fr);
+  gap: 40px;
+  align-items: center;
+  padding: 110px var(--bp-gutter) 70px;
+}
+
+.bp-hero__body {
+  animation: bpRise 1s var(--ease) both;
+}
+
+@keyframes bpRise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.bp-hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(40px, min(7.5vw, 14vh), 108px);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.bp-hero__title .bp-serif {
+  font-size: 1.04em;
+  line-height: 0.9;
+}
+
+.bp-hero__lede {
+  margin: 28px 0 0;
+  max-width: 460px;
+  font-size: clamp(15px, 2.4vh, 17px);
+  line-height: 1.5;
+  color: var(--body-ink);
+}
+
+.bp-hero__actions {
+  margin-top: 28px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.bp-hero__secondary {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+  border-bottom: 1px solid var(--muted);
+}
+
+.bp-hero__footnote {
+  position: absolute;
+  left: var(--bp-gutter);
+  right: var(--bp-gutter);
+  /* The switcher used to sit in this corner and this was hoisted clear of it.
+     With the switcher moved to the top right, the footnote returns to the foot
+     of the sheet where the drawing set puts it. */
+  bottom: 24px;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ---------- hero graph ---------- */
+
+.bp-graph {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 1 / 1.05;
+  max-height: 70vh;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.bp-graph__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+
+.bp-graph__canvas:active {
+  cursor: grabbing;
+}
+
+.bp-graph__label {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.bp-graph__hint {
+  position: absolute;
+  right: 12px;
+  bottom: 10px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+/* Keyboard equivalent of clicking the drawing. Visible on focus only, so it
+   never competes with the diagram it controls. */
+.bp-graph__reroute {
+  position: absolute;
+  left: 12px;
+  bottom: 10px;
+  padding: 6px 10px;
+  border: 1px solid var(--foreground);
+  border-radius: 2px;
+  background: var(--surface);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease);
+}
+
+.bp-graph:hover .bp-graph__reroute,
+.bp-graph__reroute:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@media (max-width: 860px) {
+  .bp-hero {
+    grid-template-columns: 1fr;
+    gap: 28px;
+    /* Clears the switcher, whose lower edge sits at 102px once the header is
+       no longer holding the top of the sheet open. */
+    padding-top: 116px;
+    padding-bottom: 96px;
+  }
+  .bp-graph {
+    aspect-ratio: 1 / 0.72;
+    max-height: 46vh;
+  }
+  .bp-hero__footnote {
+    position: static;
+    margin-top: 24px;
+    padding-right: 0;
+    flex-direction: column;
+    gap: 4px;
+  }
+  /* Touch has no hover, so the keyboard/pointer affordance is always shown. */
+  .bp-graph__reroute {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .bp-graph__hint {
+    display: none;
+  }
+}
+
+/* ---------- work: sticky stacked schematics ---------- */
+
+.bp-work {
+  position: relative;
+  padding: 60px var(--bp-gutter) 0;
+  border-top: 1px solid var(--border);
+}
+
+.bp-work__head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bp-work__hint {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.bp-card {
+  position: sticky;
+  margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 0.9fr);
+  grid-template-rows: auto 1fr;
+  gap: 0 32px;
+  min-height: min(520px, 72vh);
+  padding: 26px 28px;
+  border: 1px solid var(--foreground);
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow: 0 -12px 40px rgba(20, 22, 26, 0.06);
+}
+
+.bp-card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.bp-card__title {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.bp-card__tagline {
+  margin: 6px 0 0;
+  font-size: clamp(16px, 1.6vw, 20px);
+  font-weight: 400;
+}
+
+.bp-card__desc {
+  margin: 16px 0 0;
+  max-width: 440px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--body-ink);
+}
+
+.bp-card__stack {
+  margin: 18px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.9;
+  color: var(--muted);
+}
+
+.bp-card__actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.bp-card__run {
+  cursor: pointer;
+  padding: 7px 12px;
+  border: 1px solid var(--foreground);
+  border-radius: 3px;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.bp-card__run:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.bp-card__pending {
+  border-bottom: 1px dashed var(--border);
+}
+
+/* A photographic plate beside the schematic — the pairing a drawing set uses. */
+.bp-card__plate {
+  grid-column: 1;
+  margin: 18px 0 0;
+  align-self: end;
+}
+
+/* Constrained on both axes with auto sizing, so every plate scales whole to a
+   common height, keeps its own width, and the rule hugs the image exactly. */
+.bp-card__plate-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 200px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+}
+
+.bp-card__plate-caption {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.bp-card__schematic {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  position: relative;
+  min-height: 260px;
+  /* The route polylines carry `vector-effect: non-scaling-stroke` inside a
+     `preserveAspectRatio="none"` viewBox, and Chrome computes a bounding box
+     for that combination that reaches ~50px beyond the frame. Nothing is drawn
+     there — an SVG root clips its own overflow — but the phantom box still
+     widened the layout viewport on a phone, which pushed every fixed element,
+     the aesthetic switcher included, off the right edge. Clipping here bounds
+     the drawing to the frame it is drawn in. */
+  overflow: hidden;
+  border: 1px dashed var(--border);
+  border-radius: 4px;
+  /* Hatch fill — the drawing's unbuilt area. */
+  background: repeating-linear-gradient(
+    135deg,
+    var(--grid) 0 5px,
+    transparent 5px 10px
+  );
+}
+
+.bp-card__nodes {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.bp-card__node {
+  position: absolute;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  padding: 4px 8px;
+  border: 1px solid var(--foreground);
+  border-radius: 2px;
+  background: var(--surface);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  white-space: nowrap;
+}
+
+.bp-card__route {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.bp-card__wire {
+  fill: none;
+  stroke: var(--border-strong);
+  stroke-width: 1;
+  stroke-dasharray: 1.4 1.4;
+  opacity: 0.45;
+}
+
+/* The packet is a short lit segment travelling the wire, so it follows the
+   actual route rather than cutting across the diagram. */
+.bp-card__packet {
+  fill: none;
+  stroke: var(--accent-secondary);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-dasharray: 5 100;
+  stroke-dashoffset: 0;
+  opacity: 0;
+}
+
+.bp-card__packet[data-running] {
+  opacity: 1;
+  animation: bpPacket 2.2s linear;
+}
+
+@keyframes bpPacket {
+  from {
+    stroke-dashoffset: 5;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-card__packet[data-running] {
+    animation: none;
+    stroke-dasharray: none;
+  }
+}
+
+.bp-card__status {
+  position: absolute;
+  left: 10px;
+  bottom: 8px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .bp-card {
+    position: static;
+    grid-template-columns: 1fr;
+    gap: 24px;
+    min-height: 0;
+    padding: 22px 20px;
+  }
+  .bp-card__schematic {
+    min-height: 220px;
+  }
+  .bp-work__head {
+    flex-direction: column;
+    gap: 6px;
+  }
+}
+
+@media (max-width: 420px) {
+  .bp-card__node {
+    font-size: 9px;
+    padding: 3px 6px;
+  }
+}
+
+/* ---------- about ---------- */
+
+.bp-about {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+  padding: 100px var(--bp-gutter) 80px;
+  border-top: 1px solid var(--border);
+}
+
+.bp-about__head {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 24px;
+  margin-top: 22px;
+  align-items: start;
+}
+
+.bp-about__portrait {
+  width: 140px;
+  height: 176px;
+  object-fit: cover;
+  object-position: 50% 30%;
+  border: 1px solid var(--foreground);
+  border-radius: 3px;
+}
+
+.bp-about__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(24px, 3vw, 40px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.bp-about__title .bp-serif {
+  font-size: 1.05em;
+  font-weight: 400;
+}
+
+.bp-about__bio {
+  margin: 26px 0 0;
+  max-width: 480px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--body-ink);
+}
+
+.bp-timeline {
+  margin: 0;
+  padding: 36px 0 0;
+  list-style: none;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--body-ink);
+}
+
+.bp-timeline__row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 0 16px;
+}
+
+/* The rule that threads the entries together, drawn from each marker down to
+   the next one. */
+.bp-timeline__row:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 15px;
+  bottom: -1px;
+  width: 1px;
+  background: var(--border);
+}
+
+.bp-timeline__marker {
+  width: 9px;
+  height: 9px;
+  margin-top: 5px;
+  border: 1.5px solid var(--foreground);
+  border-radius: 50%;
+  background: var(--background);
+  position: relative;
+  z-index: 1;
+}
+
+.bp-timeline__marker[data-fill] {
+  background: var(--foreground);
+}
+
+.bp-timeline__marker[data-current] {
+  background: var(--accent-secondary);
+  border-color: var(--accent-secondary);
+}
+
+.bp-timeline__text {
+  margin: 0;
+  padding-bottom: 22px;
+}
+
+.bp-timeline__year {
+  margin-right: 12px;
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .bp-about {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding-top: 72px;
+  }
+  .bp-about__head {
+    grid-template-columns: 104px 1fr;
+    gap: 18px;
+  }
+  .bp-about__portrait {
+    width: 104px;
+    height: 132px;
+  }
+  .bp-timeline {
+    padding-top: 0;
+  }
+}
+
+/* ---------- contact ---------- */
+
+.bp-contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+  padding: 100px var(--bp-gutter);
+  border-top: 1px solid var(--border);
+}
+
+.bp-contact__title {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(38px, 6vw, 88px);
+  line-height: 0.95;
+  letter-spacing: -0.035em;
+}
+
+.bp-contact__title .bp-serif {
+  font-size: 1em;
+  font-weight: 400;
+}
+
+.bp-contact__lede {
+  margin: 26px 0 0;
+  max-width: 420px;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--body-ink);
+}
+
+.bp-contact__links {
+  margin: 32px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--body-ink);
+}
+
+.bp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 560px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.bp-form__row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 3px;
+  transition: border-color 0.2s var(--ease);
+}
+
+.bp-form__row:focus-within {
+  border-color: var(--accent);
+}
+
+.bp-form__row--brief {
+  align-items: flex-start;
+}
+
+.bp-form__row--kinds {
+  flex-wrap: wrap;
+  margin: 0;
+}
+
+.bp-form__row legend {
+  float: left;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.bp-form__row input,
+.bp-form__row textarea {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: var(--foreground);
+  outline: none;
+}
+
+.bp-form__row textarea {
+  line-height: 1.45;
+  resize: vertical;
+}
+
+.bp-form__kind {
+  cursor: pointer;
+  padding: 4px 9px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease),
+    border-color 0.2s var(--ease);
+}
+
+.bp-form__kind[aria-pressed="true"] {
+  border-color: var(--foreground);
+  background: var(--foreground);
+  color: var(--background);
+}
+
+.bp-form__submit {
+  align-self: flex-start;
+  margin-top: 8px;
+  cursor: pointer;
+  border: 0;
+  border-radius: 3px;
+  padding: 12px 18px;
+  background: var(--accent-secondary);
+  color: #14161a;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 500;
+  transition: transform 0.2s var(--ease);
+}
+
+.bp-form__submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.bp-form__submit:disabled {
+  cursor: progress;
+  opacity: 0.65;
+}
+
+/* A stamped note in the margin of the spec sheet. */
+.bp-form__status {
+  margin: 0;
+  padding-left: 12px;
+  border-left: 2px solid var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--body-ink);
+}
+
+.bp-form__status:empty {
+  display: none;
+}
+
+.bp-form__status[data-state="error"] {
+  border-left-color: var(--accent-secondary);
+  color: var(--foreground);
+}
+
+.bp-footer {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 60px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .bp-contact {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 72px var(--bp-gutter) 88px;
+  }
+  .bp-footer {
+    margin-top: 40px;
+  }
+}
+
+.bp-timeline__cert {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+}
+
+.bp-timeline__cert:hover {
+  color: var(--accent);
+  border-bottom-color: currentColor;
+}
