@@ -1,13 +1,22 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { about } from "@/data/about";
 import { site } from "@/data/site";
 import { ContactHoneypot, useContactForm } from "@/components/shared/ContactForm";
 
 export function BlueprintContact() {
-  const { ids, kinds, kind, setKind, status, statusMessage, onSubmit } =
+  const { ids, kinds, kind, setKind, status, transport, statusMessage, onSubmit, reset } =
     useContactForm();
   const copy = about.contact.blueprint;
+  const done = status === "sent";
+  const stamp = transport === "endpoint" ? copy.done.sent : copy.done.mail;
+  const panel = useRef<HTMLDivElement>(null);
+
+  // The form that held focus has just been replaced; focus follows it.
+  useEffect(() => {
+    if (done) panel.current?.focus();
+  }, [done]);
 
   return (
     <section id="contact" className="bp-contact" aria-labelledby="bp-contact-title">
@@ -42,6 +51,27 @@ export function BlueprintContact() {
         </ul>
       </div>
 
+      {done ? (
+        <div
+          className="bp-confirm"
+          ref={panel}
+          tabIndex={-1}
+          role="status"
+          aria-live="polite"
+        >
+          <p className="bp-confirm__stamp" aria-hidden="true">
+            ✓ logged
+          </p>
+          <h3 className="bp-confirm__title">
+            {stamp.title}
+            <em className="bp-serif">{stamp.suffix}</em>
+          </h3>
+          <p className="bp-confirm__lede">{statusMessage}</p>
+          <button type="button" className="bp-confirm__again" onClick={reset}>
+            {copy.again}
+          </button>
+        </div>
+      ) : (
       <form className="bp-form" onSubmit={onSubmit}>
         <ContactHoneypot />
 
@@ -98,6 +128,7 @@ export function BlueprintContact() {
           {statusMessage}
         </p>
       </form>
+      )}
 
       <footer className="bp-footer">
         <span>

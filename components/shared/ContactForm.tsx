@@ -29,7 +29,7 @@ export const HONEYPOT = "company_website";
 
 export type ContactStatus = "idle" | "sending" | "sent" | "error";
 
-type ContactTransport = "endpoint" | "mail";
+export type ContactTransport = "endpoint" | "mail";
 
 export interface ContactFormRenderProps {
   ids: { name: string; email: string; brief: string; status: string };
@@ -37,9 +37,17 @@ export interface ContactFormRenderProps {
   kind: string;
   setKind: (kind: string) => void;
   status: ContactStatus;
+  /**
+   * How the message actually travelled. The confirmation has to know: a
+   * message handed to the visitor's mail client has *not* been sent, and
+   * saying so would be the same lie in nicer packaging.
+   */
+  transport: ContactTransport;
   /** Visible, truthful account of the current state. Empty while idle. */
   statusMessage: string;
   onSubmit: (event: React.SyntheticEvent<HTMLFormElement>) => void;
+  /** Return to a blank form after a confirmation. */
+  reset: () => void;
 }
 
 const transport: ContactTransport = ENDPOINT ? "endpoint" : "mail";
@@ -193,7 +201,9 @@ export function useContactForm(): ContactFormRenderProps {
     kind,
     setKind,
     status,
+    transport,
     statusMessage: status === "idle" ? "" : STATUS_COPY[status],
     onSubmit,
+    reset: () => setStatus("idle"),
   };
 }

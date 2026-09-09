@@ -953,6 +953,88 @@
   font-weight: 500;
 }
 
+/* ---------- contact confirmation ---------- */
+
+/* Replaces the form on the lime plane. Display type, because on this section
+   everything else is display type — a mono line alone read as a footnote to a
+   form that had just vanished. */
+.sg-confirm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  max-width: 560px;
+  padding-top: 40px;
+  animation: sgConfirmIn 0.6s var(--ease) both;
+}
+
+.sg-confirm:focus-visible {
+  outline: 2px solid var(--on-accent);
+  outline-offset: 8px;
+}
+
+@keyframes sgConfirmIn {
+  from {
+    opacity: 0;
+    transform: translateY(var(--travel));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A drawn tick: two strokes, no icon font, no dependency. */
+.sg-confirm__mark {
+  width: 30px;
+  height: 15px;
+  border-left: 3px solid var(--on-accent);
+  border-bottom: 3px solid var(--on-accent);
+  transform: rotate(-45deg);
+  margin: 0 0 26px 6px;
+}
+
+.sg-confirm__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(52px, 9vw, 104px);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  color: var(--on-accent);
+}
+
+.sg-confirm__lede {
+  margin: 22px 0 0;
+  max-width: 42ch;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--on-accent-ink);
+}
+
+.sg-confirm__again {
+  margin-top: 30px;
+  cursor: pointer;
+  padding: 13px 20px;
+  border: 1.5px solid var(--on-accent);
+  background: transparent;
+  color: var(--on-accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
+}
+
+.sg-confirm__again:hover {
+  background: var(--on-accent);
+  color: var(--accent);
+}
+
 .sg-footer {
   grid-column: 1 / -1;
   display: flex;

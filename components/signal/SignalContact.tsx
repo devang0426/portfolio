@@ -1,13 +1,23 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { about } from "@/data/about";
 import { signalNumber, site } from "@/data/site";
 import { ContactHoneypot, useContactForm } from "@/components/shared/ContactForm";
 
 export function SignalContact() {
-  const { ids, kinds, kind, setKind, status, statusMessage, onSubmit } =
+  const { ids, kinds, kind, setKind, status, transport, statusMessage, onSubmit, reset } =
     useContactForm();
   const copy = about.contact.signal;
+  const done = status === "sent";
+  const panel = useRef<HTMLDivElement>(null);
+
+  // The form that held focus has just been replaced. Without this, focus falls
+  // back to the body and a keyboard visitor is dropped at the top of the page
+  // with no idea whether anything happened.
+  useEffect(() => {
+    if (done) panel.current?.focus();
+  }, [done]);
 
   return (
     <section id="contact" className="sg-contact" aria-labelledby="sg-contact-title">
@@ -45,6 +55,31 @@ export function SignalContact() {
         </ul>
       </div>
 
+      {done ? (
+        <div
+          className="sg-confirm"
+          ref={panel}
+          tabIndex={-1}
+          role="status"
+          aria-live="polite"
+        >
+          <span className="sg-confirm__mark" aria-hidden="true" />
+          <h3 className="sg-confirm__title">
+            {(transport === "endpoint" ? copy.done.sent : copy.done.mail).map(
+              (line, i) => (
+                <span key={line}>
+                  {line}
+                  {i === 0 ? <br /> : null}
+                </span>
+              ),
+            )}
+          </h3>
+          <p className="sg-confirm__lede">{statusMessage}</p>
+          <button type="button" className="sg-confirm__again" onClick={reset}>
+            {copy.again}
+          </button>
+        </div>
+      ) : (
       <form className="sg-form" onSubmit={onSubmit}>
         <ContactHoneypot />
 
@@ -103,6 +138,7 @@ export function SignalContact() {
           {statusMessage}
         </p>
       </form>
+      )}
 
       <footer className="sg-footer">
         <span>© {site.year} {site.name}</span>

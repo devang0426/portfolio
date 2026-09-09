@@ -39,10 +39,16 @@ export const about = {
       lines: ["Let's", "talk."],
       lede: "Whether it's a role or a project, tell me what you have in mind. I reply within 24 hours.",
       submit: "Send message →",
-      /* Shown on the button while a submission is in flight. The outcome itself
-         is reported by the form's own status line, which knows how the message
-         actually travelled. */
+      /* Shown on the button while a submission is in flight. */
       pending: "Sending…",
+      /* The confirmation that replaces the form. Two headlines, because the two
+         transports are not the same event: an endpoint has delivered it, a mail
+         handoff has only written it. Signal splits its headings across lines. */
+      done: {
+        sent: ["Message", "sent."],
+        mail: ["Nearly", "there."],
+      },
+      again: "Send another",
     },
     blueprint: {
       title: "New enquiry",
@@ -50,6 +56,13 @@ export const about = {
       lede: "Fill in what you know. I reply within 24 hours with scope, a timeline and a time to talk.",
       submit: "Submit enquiry →",
       pending: "Submitting…",
+      /* Blueprint stamps the sheet rather than announcing, and keeps its
+         file-suffix voice. */
+      done: {
+        sent: { title: "Enquiry", suffix: ".received" },
+        mail: { title: "Enquiry", suffix: ".drafted" },
+      },
+      again: "New enquiry",
     },
   },
 };

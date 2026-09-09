@@ -994,6 +994,91 @@
   color: var(--foreground);
 }
 
+/* ---------- contact confirmation ---------- */
+
+/* The drawing-set answer to a success screen: the sheet comes back stamped. */
+.bp-confirm {
+  max-width: 560px;
+  padding: 26px 28px;
+  border: 1px solid var(--foreground);
+  border-radius: 6px;
+  background: var(--surface);
+  animation: bpConfirmIn 0.5s var(--ease) both;
+}
+
+.bp-confirm:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+@keyframes bpConfirmIn {
+  from {
+    opacity: 0;
+    transform: translateY(var(--travel));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Rotated like a rubber stamp pressed slightly off square. */
+.bp-confirm__stamp {
+  display: inline-block;
+  margin: 0 0 18px;
+  padding: 5px 12px;
+  border: 1.5px solid var(--accent-secondary);
+  border-radius: 3px;
+  transform: rotate(-3deg);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-secondary);
+}
+
+.bp-confirm__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(30px, 4.4vw, 52px);
+  line-height: 1;
+  letter-spacing: -0.035em;
+}
+
+.bp-confirm__title .bp-serif {
+  font-size: 1em;
+  font-weight: 400;
+}
+
+.bp-confirm__lede {
+  margin: 18px 0 0;
+  max-width: 44ch;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.7;
+  color: var(--body-ink);
+}
+
+.bp-confirm__again {
+  margin-top: 24px;
+  cursor: pointer;
+  padding: 9px 15px;
+  border: 1px solid var(--foreground);
+  border-radius: 3px;
+  background: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  transition:
+    background-color 0.2s var(--ease),
+    color 0.2s var(--ease);
+}
+
+.bp-confirm__again:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
 .bp-footer {
   grid-column: 1 / -1;
   display: flex;
