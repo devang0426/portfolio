@@ -69,16 +69,42 @@ const mailtoFor = (fields: Fields) => {
 };
 
 /**
- * The one shape sent to whichever service is configured. `subject` and
- * `from_name` are what turn the notification email into something readable in
- * an inbox rather than a wall of field names.
+ * The one shape sent to whichever service is configured. The duplication is
+ * deliberate and cheap: Web3Forms reads `subject`, FormSubmit and Formspree
+ * read `_subject`, and sending both keeps the endpoint swappable without a
+ * code change. `_captcha` matters — FormSubmit otherwise answers an AJAX post
+ * with a captcha page no fetch can complete.
  */
-const payloadFor = (fields: Fields) => ({
-  ...(ACCESS_KEY ? { access_key: ACCESS_KEY } : {}),
-  subject: `Portfolio — ${fields.kind} — ${fields.name}`,
-  from_name: fields.name,
-  ...fields,
-});
+const payloadFor = (fields: Fields) => {
+  const subject = `Portfolio — ${fields.kind} — ${fields.name}`;
+  return {
+    ...(ACCESS_KEY ? { access_key: ACCESS_KEY } : {}),
+    subject,
+    _subject: subject,
+    from_name: fields.name,
+    _captcha: "false",
+    _template: "table",
+    ...fields,
+  };
+};
+
+/**
+ * Did the service accept it? Returns null when the body says nothing either
+ * way, leaving the HTTP status to decide.
+ *
+ * The string case is load-bearing, not defensive noise: FormSubmit answers a
+ * *rejected* submission with HTTP 200 and `{"success":"false"}` — the string,
+ * not the boolean. Checking only for a boolean would read that as success and
+ * tell the visitor their message was sent when it was thrown away, which is
+ * the exact failure this whole form was rewritten to stop doing.
+ */
+const succeeded = (body: unknown): boolean | null => {
+  if (typeof body !== "object" || body === null) return null;
+  const value = (body as { success?: unknown }).success;
+  if (typeof value === "boolean") return value;
+  if (typeof value === "string") return value.toLowerCase() === "true";
+  return null;
+};
 
 /** Hidden off-screen rather than `display: none`, which bots learned to skip. */
 export function ContactHoneypot() {
@@ -140,8 +166,10 @@ export function useContactForm(): ContactFormRenderProps {
           // when there is one and the status decides when there is not.
           let ok = response.ok;
           try {
-            const body = await response.json();
-            if (typeof body?.success === "boolean") ok = body.success;
+            // FormSubmit sends JSON under a `text/html` content type, so the
+            // body is parsed regardless of what the header claims.
+            const verdict = succeeded(await response.json());
+            if (verdict !== null) ok = verdict;
           } catch {
             /* not JSON — the status stands */
           }
