@@ -28,11 +28,14 @@ export const site = {
    * résumé link that 404s in front of a recruiter.
    */
   resume: "/devang-sharma-resume.pdf" as string,
-  /** On the CV, but deliberately not rendered — a phone number on a public page
-      is a spam magnet. Wire it into the contact list if you want it shown. */
+  /** Rendered in the contact list of both aesthetics. Spaced for reading; use
+      `phoneHref` for the dialable form. */
   phone: "+91 82902 61719",
   year: "2026",
 } as const;
+
+/** Dialable form of `site.phone` — the display spacing is not valid in `tel:`. */
+export const phoneHref = `tel:${site.phone.replace(/\s/g, "")}`;
 
 export type SectionId = "hero" | "work" | "about" | "contact";
 

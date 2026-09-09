@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { about } from "@/data/about";
-import { signalNumber, site } from "@/data/site";
+import { phoneHref, signalNumber, site } from "@/data/site";
 import { ContactHoneypot, useContactForm } from "@/components/shared/ContactForm";
 
 export function SignalContact() {
@@ -34,6 +34,9 @@ export function SignalContact() {
         <ul className="sg-contact__links">
           <li>
             <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <a href={phoneHref}>{site.phone}</a>
           </li>
           {site.resume ? (
             <li>

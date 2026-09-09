@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { about } from "@/data/about";
-import { site } from "@/data/site";
+import { phoneHref, site } from "@/data/site";
 import { ContactHoneypot, useContactForm } from "@/components/shared/ContactForm";
 
 export function BlueprintContact() {
@@ -30,6 +30,9 @@ export function BlueprintContact() {
         <ul className="bp-contact__links">
           <li>
             <a href={`mailto:${site.email}`}>{site.email}</a>
+          </li>
+          <li>
+            <a href={phoneHref}>{site.phone}</a>
           </li>
           {site.resume ? (
             <li>
