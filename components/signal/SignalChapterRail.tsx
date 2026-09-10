@@ -1,9 +1,17 @@
 "use client";
 
-import { stack } from "@/data/skills";
 import { signalChapters } from "@/data/site";
 
-/** Bottom rail: chapter index on the left, an infinite stack ticker on the right. */
+/**
+ * Bottom rail: the chapter index.
+ *
+ * The right end used to scroll an endless list of the stack. It has been given
+ * over to the music player instead — the ticker named sixteen technologies at a
+ * reader who could not click any of them, while the work section says the same
+ * thing per project, with the thing each one was actually used to build. The
+ * stack data itself is untouched: `page.tsx` still publishes it as `knowsAbout`
+ * in the structured data, which is where a list like that is genuinely read.
+ */
 export function SignalChapterRail({ active }: { active: string }) {
   return (
     <div className="sg-rail">
@@ -19,17 +27,6 @@ export function SignalChapterRail({ active }: { active: string }) {
           </a>
         ))}
       </nav>
-      <div className="sg-rail__ticker" aria-hidden="true">
-        <div className="sg-rail__ticker-track">
-          {[0, 1].map((copy) => (
-            <span key={copy} className="sg-rail__ticker-group">
-              {stack.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </span>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

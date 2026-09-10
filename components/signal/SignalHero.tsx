@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { about } from "@/data/about";
+import { HIRE_ROUTE, hire } from "@/data/hire";
 import { useViewportTier } from "@/lib/useViewportTier";
 import { SignalNetwork } from "./SignalNetwork";
 
@@ -26,10 +28,17 @@ export function SignalHero() {
 
         <div className="sg-hero__aside">
           <p className="sg-hero__lede">{about.hero.signal.lede}</p>
-          <a href="#contact" className="sg-hero__cta">
-            {about.hero.signal.cta}
-            <span aria-hidden="true">→</span>
-          </a>
+          <div className="sg-hero__ctas">
+            <a href="#contact" className="sg-hero__cta">
+              {about.hero.signal.cta}
+              <span aria-hidden="true">→</span>
+            </a>
+            {/* A route, not an anchor, so it prefetches and the clip on the
+                other side is ready by the time it is asked for. */}
+            <Link href={HIRE_ROUTE} className="sg-hero__cta sg-hero__cta--ghost">
+              {hire.cta.signal}
+            </Link>
+          </div>
         </div>
       </div>
     </section>

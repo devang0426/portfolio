@@ -90,9 +90,10 @@
   color: var(--subtle);
 }
 
-/* The chapter list grows with the project data, so it absorbs every shortfall
-   and scrolls; the ticker keeps a fixed share rather than being squeezed to a
-   useless sliver. The right-edge fade is the affordance that there is more. */
+/* The chapter list grows with the project data, so it scrolls rather than
+   squeezing its entries. The right-edge fade is the affordance that there is
+   more; the rail's own padding keeps the last chapter clear of the player
+   docked at the far end. */
 .sg-rail__chapters {
   flex: 1 1 auto;
   min-width: 0;
@@ -117,36 +118,18 @@
   color: var(--accent);
 }
 
-.sg-rail__ticker {
-  flex: 0 0 clamp(200px, 22vw, 380px);
-  overflow: hidden;
-  mask-image: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent);
-}
-
-.sg-rail__ticker-track {
-  display: flex;
-  width: max-content;
-  color: var(--muted);
-  animation: sgTicker 30s linear infinite;
-}
-
-.sg-rail__ticker-group {
-  display: flex;
-  gap: 28px;
-  padding-right: 28px;
-}
-
-@keyframes sgTicker {
-  to {
-    transform: translateX(-50%);
+/* The player docks into the right end of the rail, where the stack ticker
+   used to run. Reserved here rather than by the player itself, because the
+   player lives in the root layout and cannot reach into this bar's layout. */
+@media (min-width: 1101px) {
+  .sg-rail {
+    padding-right: calc(272px + var(--sg-gutter));
   }
 }
 
-/* Below this the rail needs the whole bar for its own chapters. */
+/* Below this the rail needs the whole bar for its own chapters, and the player
+   lifts clear of it. */
 @media (max-width: 1100px) {
-  .sg-rail__ticker {
-    display: none;
-  }
   .sg-rail {
     gap: 0;
   }
@@ -1084,5 +1067,499 @@
        rather than a block floating above dead space. */
     padding-top: 22px;
     border-top: 1px solid var(--border);
+  }
+}
+
+/* ---------- hero: secondary route to the hire page ---------- */
+
+/* The lime plate is the one call to action in this hero; this sits beside it as
+   an outline of the same shape, so it reads as the second thing to do rather
+   than as a competing first. */
+.sg-hero__cta--ghost {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border-strong);
+  transition:
+    transform 0.3s var(--ease),
+    border-color 0.3s var(--ease),
+    color 0.3s var(--ease);
+}
+
+.sg-hero__cta--ghost:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.sg-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ============================================================
+   WHY HIRE ME — the case, in Signal's voice.
+   ============================================================ */
+
+.sg-hire main {
+  padding-bottom: 0;
+}
+
+.sg-hire__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 5vw, 64px);
+  align-items: center;
+  min-height: 100svh;
+  padding: clamp(96px, 14vh, 140px) var(--sg-gutter) clamp(48px, 8vh, 80px);
+}
+
+.sg-hire__title {
+  margin: 18px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(52px, 7.2vw, 116px);
+  line-height: 0.85;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.sg-hire__line {
+  display: block;
+  animation: sgRise 1.1s var(--ease) both;
+}
+
+.sg-hire__line:nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.sg-hire__line:nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+/* The same second voice the surname is drawn in on the home page. */
+.sg-hire__line--outline {
+  color: transparent;
+  -webkit-text-stroke: clamp(1px, 0.16vw, 2px) var(--foreground);
+}
+
+.sg-hire__lede {
+  margin: 26px 0 0;
+  max-width: 42ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--accent-secondary);
+}
+
+/* ---------- the clip ---------- */
+
+.sg-hire__stage {
+  position: relative;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border-strong);
+  background: var(--surface);
+  overflow: hidden;
+  animation: sgRise 1.1s 0.25s var(--ease) both;
+}
+
+.sg-hire__video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  /* `cover` rather than `contain`: a phone-shot clip letterboxed into a wide
+     frame is four bars of nothing. Anything crucial belongs near the middle. */
+  object-fit: cover;
+  background: var(--surface-alt);
+}
+
+/* A file that never loads leaves an empty frame, so the frame says so itself. */
+.sg-hire__stage[data-status="failed"] .sg-hire__video {
+  display: none;
+}
+
+.sg-hire__stage[data-status="failed"]::before {
+  content: "";
+  display: block;
+  aspect-ratio: 16 / 9;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      var(--surface-alt) 0 12px,
+      var(--surface) 12px 24px
+    );
+}
+
+/* No visible track: the lime line simply grows out of the left edge, and the
+   rule under it is the caption's own border. */
+.sg-hire__progress {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.sg-hire__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 20px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--subtle);
+}
+
+.sg-hire__meta {
+  min-width: 0;
+  flex: 1 1 220px;
+}
+
+.sg-hire__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sg-hire__control {
+  appearance: none;
+  cursor: pointer;
+  padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color 0.28s var(--ease),
+    border-color 0.28s var(--ease),
+    background-color 0.28s var(--ease);
+}
+
+.sg-hire__control:hover {
+  color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+.sg-hire__control[data-on] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+
+
+
+/* ---------- the case ---------- */
+
+/* Closed, the case takes no height at all: a visitor watching the clip should
+   not be told by the scrollbar that there is a screenful of nothing below it.
+   The markup stays in the document — a crawler, and anyone whose clip failed,
+   still gets the written argument — and `inert` keeps it out of the tab order
+   until it is genuinely on screen. */
+.sg-hire__case {
+  outline: none;
+}
+
+/* `display: none`, not a clipped zero-height box. A zero-height box with
+   `overflow: hidden` still left its subtree in the document's scroll height —
+   two screens of scrollable nothing under a sealed case, which is a strange
+   thing to hand someone who is waiting out a seven-second clip. Taking the
+   subtree out of layout entirely is the only thing that reliably fixes that.
+
+   The markup is still in the document for a crawler, and `inert` still holds
+   the tab order. The reveal measures a laid-out tree either way: React commits
+   `data-state="open"` before the layout effect that builds the timeline runs. */
+.sg-hire__case[data-state="closed"] {
+  display: none;
+}
+
+.sg-hire__rule {
+  display: block;
+  height: 1px;
+  background: var(--accent);
+  transform-origin: left center;
+}
+
+.sg-hire__group {
+  padding: clamp(56px, 9vh, 88px) var(--sg-gutter);
+  border-bottom: 1px solid var(--border);
+}
+
+.sg-hire__group-title {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(40px, 6vw, 84px);
+  line-height: 0.88;
+  text-transform: uppercase;
+}
+
+.sg-hire__cards {
+  margin: clamp(28px, 4vh, 44px) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.sg-hire__card {
+  position: relative;
+  padding: 26px 24px 30px;
+  background: var(--background);
+  transition: background-color 0.35s var(--ease);
+}
+
+.sg-hire__card:hover {
+  background: var(--surface-alt);
+}
+
+.sg-hire__card-number {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+.sg-hire__card-title {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.sg-hire__card-detail {
+  margin: 12px 0 0;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+/* ---------- closer ---------- */
+
+.sg-hire__closer {
+  padding: clamp(72px, 12vh, 120px) var(--sg-gutter) clamp(88px, 14vh, 140px);
+}
+
+.sg-hire__closer-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(52px, 8vw, 118px);
+  line-height: 0.85;
+  text-transform: uppercase;
+}
+
+.sg-hire__closer-lede {
+  margin: 24px 0 0;
+  max-width: 44ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--accent-secondary);
+}
+
+/* The pair the page ends on: make the case, then offer the evidence. */
+.sg-hire__closer-ctas {
+  margin-top: 28px;
+}
+
+@media (max-width: 1000px) {
+  .sg-hire__intro {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 32px;
+    min-height: 0;
+  }
+  .sg-hire__lede {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  .sg-hire__video {
+    /* A near-square frame keeps a portrait clip readable on a phone without
+       cropping it to a letterbox slot. */
+    aspect-ratio: 4 / 3;
+  }
+  .sg-hire__stage[data-status="failed"]::before {
+    aspect-ratio: 4 / 3;
+  }
+  .sg-hire__controls {
+    font-size: 10px;
+  }
+  .sg-hire__control {
+    padding: 8px 10px;
+    font-size: 10px;
+  }
+  .sg-hire__card {
+    padding: 22px 20px 26px;
+  }
+}
+
+/* ---------- client work ---------- */
+
+.sg-hire__client {
+  padding: clamp(56px, 9vh, 88px) var(--sg-gutter);
+  border-bottom: 1px solid var(--border);
+}
+
+.sg-hire__client-lede {
+  margin: clamp(20px, 3vh, 30px) 0 0;
+  max-width: 52ch;
+  font-size: 17px;
+  line-height: 1.55;
+  color: var(--accent-secondary);
+}
+
+/* Drawn as a plate rather than as another card in the grid: it is the one item
+   on this page a stranger can verify, and it should not read as a seventh
+   claim in a row of six. */
+.sg-hire__client-panel {
+  margin: clamp(28px, 4vh, 44px) 0 0;
+  padding: 30px 28px 32px;
+  border: 1px solid var(--accent);
+  background: var(--surface);
+}
+
+.sg-hire__client-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--subtle);
+}
+
+.sg-hire__client-name {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(32px, 4.6vw, 60px);
+  line-height: 0.92;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+.sg-hire__client-summary {
+  margin: 14px 0 0;
+  max-width: 58ch;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.sg-hire__client-scope {
+  margin: 18px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.sg-hire__client-scope-label {
+  margin-right: 12px;
+  color: var(--subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.sg-hire__client-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 22px;
+  padding: 12px 18px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition:
+    background-color 0.3s var(--ease),
+    color 0.3s var(--ease),
+    transform 0.3s var(--ease);
+}
+
+.sg-hire__client-link:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: translateX(4px);
+}
+
+/* ---------- the quote ---------- */
+
+.sg-hire__quote {
+  margin: clamp(28px, 4vh, 40px) 0 0;
+  padding-left: clamp(20px, 3vw, 36px);
+  border-left: 2px solid var(--accent);
+  max-width: 62ch;
+}
+
+.sg-hire__quote-text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(21px, 2.6vw, 32px);
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+}
+
+/* Typographic quotes, drawn by the stylesheet so the data stays plain text and
+   the same string can be read aloud without two stray glyphs in it. */
+.sg-hire__quote-text::before {
+  content: "\201C";
+}
+
+.sg-hire__quote-text::after {
+  content: "\201D";
+}
+
+.sg-hire__quote-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 18px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--subtle);
+}
+
+.sg-hire__quote-author {
+  color: var(--accent);
+}
+
+.sg-hire__quote-author::before {
+  content: "— ";
+}
+
+@media (max-width: 720px) {
+  .sg-hire__client-panel {
+    padding: 24px 20px 26px;
+  }
+  .sg-hire__client-lede,
+  .sg-hire__client-summary {
+    font-size: 15px;
   }
 }

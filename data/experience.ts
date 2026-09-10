@@ -18,6 +18,15 @@ export interface TimelineEntry {
 }
 
 export const timeline: TimelineEntry[] = [
+  /* The origin point, and the reason this list starts before university: a
+     working voice agent built in class 11 turns "started at university" into a
+     five-year arc, which is the more useful thing for a reader to know.
+     CHECK THE YEAR — inferred from the B.Tech dates below rather than told. */
+  {
+    year: "2021–22",
+    text: "First AI agent — a Python voice assistant that took mic input and ran desktop tasks",
+    filled: true,
+  },
   {
     year: "2023–27",
     text: "B.Tech Computer Science & Engineering, JECRC University, Jaipur",

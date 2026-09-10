@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import { about } from "@/data/about";
+import { HIRE_ROUTE, hire } from "@/data/hire";
 import { blueprintNumber, site } from "@/data/site";
 import { BlueprintGraph } from "./BlueprintGraph";
 
@@ -26,6 +28,11 @@ export function BlueprintHero() {
           <a href="#contact" className="bp-button">
             {copy.cta}
           </a>
+          {/* A route, not an anchor, so it prefetches and the clip on the other
+              side is ready by the time it is asked for. */}
+          <Link href={HIRE_ROUTE} className="bp-button bp-button--ghost">
+            {hire.cta.blueprint}
+          </Link>
           <a href="#work" className="bp-hero__secondary">
             {copy.secondaryCta} ↓
           </a>

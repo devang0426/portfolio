@@ -9,6 +9,7 @@ import {
 } from "next/font/google";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { aestheticCss } from "@/aesthetics/css";
+import { Jukebox } from "@/components/shared/Jukebox";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -203,6 +204,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body>
         {children}
+        {/* Outside `children` on purpose: mounted here it belongs to the
+            document rather than to a page, so a track survives the walk from
+            the portfolio to the hire page instead of being cut off by the route
+            change. It renders as a single collapsed control and fetches nothing
+            until someone opens it. */}
+        <Jukebox />
         {/* Real Core Web Vitals from real visitors — the only measurement that
             can tell whether the pinned track and the canvas fields behave on
             the hardware recruiters actually use. Gated on Vercel because its

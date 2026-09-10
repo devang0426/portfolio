@@ -13,10 +13,16 @@ import { workChapterScrollY } from "./work-scrub";
  */
 let driver: Lenis | null = null;
 
-/** Scroll the page, through Lenis when it is driving and natively when not. */
-export function scrollToY(y: number) {
-  if (driver) driver.scrollTo(y, { offset: 0 });
-  else window.scrollTo({ top: y, behavior: "smooth" });
+/**
+ * Scroll the page, through Lenis when it is driving and natively when not.
+ *
+ * `immediate` skips the glide. It is for arriving somewhere rather than
+ * travelling there — landing on a hash from another route, where a second of
+ * animated scroll past everything in between is not a transition, just a wait.
+ */
+export function scrollToY(y: number, immediate = false) {
+  if (driver) driver.scrollTo(y, { offset: 0, immediate });
+  else window.scrollTo({ top: y, behavior: immediate ? "auto" : "smooth" });
 }
 
 /**

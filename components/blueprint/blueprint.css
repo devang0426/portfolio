@@ -1111,3 +1111,495 @@
   color: var(--accent);
   border-bottom-color: currentColor;
 }
+
+/* ---------- hero: secondary route to the hire sheet ---------- */
+
+/* The filled button is the one call to action in this hero; this is the same
+   shape drawn rather than filled, so the row reads as first thing, second. */
+.bp-button--ghost {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border-strong);
+  transition:
+    border-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.bp-button--ghost:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
+/* ============================================================
+   WHY HIRE ME — the case, drawn as a sheet.
+   ============================================================ */
+
+/* One drawing rather than a set, so the rail carries no figure list. The lamp
+   drops to the foot of it, where the figures used to end. */
+.bp-hire__lamp {
+  margin: auto 0 0;
+}
+
+.bp-hire__intro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 1.15fr);
+  gap: clamp(28px, 4vw, 48px);
+  align-items: center;
+  min-height: 100svh;
+  padding: 110px var(--bp-gutter) 70px;
+}
+
+.bp-hire__title {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(36px, 5.6vw, 84px);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+  animation: bpRise 1s var(--ease) both;
+}
+
+.bp-hire__title .bp-serif {
+  font-size: 1.04em;
+  line-height: 0.9;
+}
+
+.bp-hire__lede {
+  margin: 24px 0 0;
+  max-width: 46ch;
+  font-size: clamp(15px, 2.4vh, 17px);
+  line-height: 1.5;
+  color: var(--body-ink);
+  animation: bpRise 1s 0.08s var(--ease) both;
+}
+
+/* ---------- the clip ---------- */
+
+.bp-hire__stage {
+  position: relative;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--foreground);
+  border-radius: 6px;
+  background: var(--surface);
+  overflow: hidden;
+  box-shadow: 0 -12px 40px rgba(20, 22, 26, 0.06);
+  animation: bpRise 1s 0.16s var(--ease) both;
+}
+
+.bp-hire__video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  /* `cover` rather than `contain`: a phone-shot clip letterboxed into a wide
+     frame is four bars of nothing. Anything crucial belongs near the middle. */
+  object-fit: cover;
+  background: var(--surface-alt);
+}
+
+/* A file that never loads leaves an empty frame, so the frame says so itself —
+   in this aesthetic, as an unexposed plate. */
+.bp-hire__stage[data-status="failed"] .bp-hire__video {
+  display: none;
+}
+
+.bp-hire__stage[data-status="failed"]::before {
+  content: "";
+  display: block;
+  aspect-ratio: 16 / 9;
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--surface-alt) 0 10px,
+    var(--surface) 10px 20px
+  );
+}
+
+/* Blueprint keeps the whole run visible and fills it — a gauge, not a signal. */
+.bp-hire__track {
+  display: block;
+  height: 3px;
+  width: 100%;
+  background: var(--surface-alt);
+  border-top: 1px solid var(--border);
+}
+
+.bp-hire__progress {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--accent-secondary);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.bp-hire__controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px 20px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.bp-hire__meta {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+
+.bp-hire__actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bp-hire__control {
+  appearance: none;
+  cursor: pointer;
+  padding: 7px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  white-space: nowrap;
+  transition:
+    color 0.25s var(--ease),
+    border-color 0.25s var(--ease),
+    background-color 0.25s var(--ease);
+}
+
+.bp-hire__control:hover {
+  color: var(--foreground);
+  border-color: var(--foreground);
+}
+
+.bp-hire__control[data-on] {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+
+
+
+/* ---------- the case ---------- */
+
+/* Closed, the case takes no height at all: a visitor watching the clip should
+   not be told by the scrollbar that there is a screenful of nothing below it.
+   The markup stays in the document — a crawler, and anyone whose clip failed,
+   still gets the written argument — and `inert` keeps it out of the tab order
+   until it is genuinely on screen. */
+.bp-hire__case {
+  outline: none;
+}
+
+/* `display: none`, not a clipped zero-height box. A zero-height box with
+   `overflow: hidden` still left its subtree in the document's scroll height —
+   two screens of scrollable nothing under a sealed case, which is a strange
+   thing to hand someone who is waiting out a seven-second clip. Taking the
+   subtree out of layout entirely is the only thing that reliably fixes that.
+
+   The markup is still in the document for a crawler, and `inert` still holds
+   the tab order. The reveal measures a laid-out tree either way: React commits
+   `data-state="open"` before the layout effect that builds the timeline runs. */
+.bp-hire__case[data-state="closed"] {
+  display: none;
+}
+
+.bp-hire__rule {
+  display: block;
+  height: 1px;
+  background: var(--border-strong);
+  transform-origin: left center;
+}
+
+.bp-hire__group {
+  padding: clamp(56px, 9vh, 88px) var(--bp-gutter) clamp(40px, 6vh, 64px);
+}
+
+.bp-hire__group + .bp-hire__group {
+  border-top: 1px solid var(--border);
+}
+
+.bp-hire__group-title {
+  margin: 12px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(26px, 3.4vw, 44px);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.bp-hire__cards {
+  margin: clamp(26px, 4vh, 40px) 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 18px;
+}
+
+.bp-hire__card {
+  display: flex;
+  flex-direction: column;
+  padding: 22px 22px 26px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  transition:
+    border-color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.bp-hire__card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.bp-hire__card-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.bp-hire__card-title {
+  margin: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(19px, 2vw, 24px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.bp-hire__card-detail {
+  margin: 10px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--body-ink);
+}
+
+/* ---------- closer ---------- */
+
+.bp-hire__closer {
+  padding: clamp(64px, 10vh, 100px) var(--bp-gutter) clamp(80px, 13vh, 120px);
+  border-top: 1px solid var(--border);
+}
+
+.bp-hire__closer-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(32px, 4.6vw, 64px);
+  line-height: 1.02;
+  letter-spacing: -0.035em;
+}
+
+.bp-hire__closer-title .bp-serif {
+  font-size: 1.02em;
+  font-weight: 400;
+}
+
+/* Not `.bp-hire__actions` — that name is already spoken for by the controls
+   under the clip, and two different rows answering to one class is how a
+   stylesheet starts lying. */
+.bp-hire__closer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+}
+
+.bp-hire__closer-lede {
+  margin: 20px 0 28px;
+  max-width: 46ch;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--body-ink);
+}
+
+@media (max-width: 860px) {
+  /* The rail has lain down into a bottom bar, so the lamp stops reaching for a
+     bottom that is no longer there. */
+  .bp-hire__lamp {
+    margin: 0;
+  }
+  .bp-hire__intro {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 28px;
+    min-height: 0;
+    padding: 96px var(--bp-gutter) 56px;
+  }
+}
+
+@media (max-width: 720px) {
+  .bp-hire__video {
+    /* A near-square frame keeps a portrait clip readable on a phone without
+       cropping it to a letterbox slot. */
+    aspect-ratio: 4 / 3;
+  }
+  .bp-hire__stage[data-status="failed"]::before {
+    aspect-ratio: 4 / 3;
+  }
+  .bp-hire__controls {
+    font-size: 10px;
+  }
+  .bp-hire__control {
+    padding: 7px 10px;
+    font-size: 10px;
+  }
+}
+
+/* ---------- client work ---------- */
+
+.bp-hire__client {
+  padding: clamp(56px, 9vh, 88px) var(--bp-gutter) clamp(40px, 6vh, 64px);
+  border-top: 1px solid var(--border);
+}
+
+.bp-hire__client-lede {
+  margin: clamp(18px, 3vh, 28px) 0 0;
+  max-width: 54ch;
+  font-size: 16px;
+  line-height: 1.55;
+  color: var(--body-ink);
+}
+
+/* Drawn as an approved sheet rather than as another card in the grid: it is
+   the one item on this page a stranger can verify, and it should not read as a
+   seventh claim in a row of six. */
+.bp-hire__client-panel {
+  margin: clamp(26px, 4vh, 40px) 0 0;
+  padding: 26px 26px 30px;
+  border: 1px solid var(--foreground);
+  border-radius: 6px;
+  background: var(--surface);
+  box-shadow: 0 -12px 40px rgba(20, 22, 26, 0.06);
+}
+
+.bp-hire__client-name {
+  margin: 16px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(26px, 3.6vw, 46px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.bp-hire__client-summary {
+  margin: 12px 0 0;
+  max-width: 58ch;
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--body-ink);
+}
+
+.bp-hire__client-scope {
+  margin: 16px 0 0;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.bp-hire__client-scope-label {
+  margin-right: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--subtle);
+}
+
+.bp-hire__client-link {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 20px;
+  padding: 11px 16px;
+  border: 1px solid var(--accent);
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease),
+    transform 0.25s var(--ease);
+}
+
+.bp-hire__client-link:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+  transform: translateY(-1px);
+}
+
+/* ---------- the quote ---------- */
+
+/* Blueprint annotates rather than declaims: the quote is set in the serif that
+   already carries every accent on this site, hung off a margin rule. */
+.bp-hire__quote {
+  margin: clamp(26px, 4vh, 40px) 0 0;
+  padding-left: clamp(18px, 2.6vw, 32px);
+  border-left: 1px solid var(--accent);
+  max-width: 62ch;
+}
+
+.bp-hire__quote-text {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(19px, 2.4vw, 28px);
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  text-wrap: pretty;
+  color: var(--foreground);
+}
+
+/* The opening glyph is set large and in the accent, the way the sheet marks
+   any other annotation. The closing one is left to the prose. */
+.bp-hire__quote-text .bp-serif {
+  font-size: 1.4em;
+  line-height: 0;
+  vertical-align: -0.12em;
+  margin-right: 2px;
+}
+
+.bp-hire__quote-text::after {
+  content: "\201D";
+}
+
+.bp-hire__quote-source {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.bp-hire__quote-author {
+  color: var(--foreground);
+}
+
+.bp-hire__quote-author::before {
+  content: "— ";
+}
+
+@media (max-width: 720px) {
+  .bp-hire__client-panel {
+    padding: 22px 20px 26px;
+  }
+  .bp-hire__client-lede {
+    font-size: 15px;
+  }
+}

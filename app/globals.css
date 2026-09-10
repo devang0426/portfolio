@@ -137,16 +137,28 @@ html[data-restoring] body {
    aesthetics already spend that corner on an availability status — Signal's
    "available for work", Blueprint's "status: available" — and those say
    something a visitor wants, so the switcher sits on the line below instead of
-   fighting them for the corner. */
-.switcher {
+   fighting them for the corner.
+
+   The right offset matches `--sg-gutter`. This renders outside
+   `.portfolio-root`, so it cannot inherit that variable — but it shares a
+   column with the nav status above it and the hero readout below, and a chip
+   16px proud of both of them reads as a mistake. Blueprint restates it with its
+   own gutter.
+
+   The dock, rather than the switcher itself, is what is positioned: the arrow
+   below needs something with a known box to be measured and placed against. */
+.switcher-dock {
   position: fixed;
   z-index: 40;
-  /* Matches `--sg-gutter`. The switcher renders outside `.portfolio-root`, so
-     it cannot inherit that variable — but it now shares a column with the nav
-     status above it and the hero readout below, and a chip 16px proud of both
-     of them reads as a mistake. Blueprint restates this with its own gutter. */
   right: clamp(20px, 4vw, 40px);
   top: 72px;
+  transition:
+    top 0.4s var(--ease),
+    right 0.4s var(--ease);
+}
+
+.switcher {
+  position: relative;
   display: flex;
   align-items: center;
   font-family: var(--font-mono);
@@ -158,14 +170,15 @@ html[data-restoring] body {
   overflow: hidden;
   transition:
     background-color 0.4s var(--ease),
-    border-color 0.4s var(--ease),
-    top 0.4s var(--ease),
-    right 0.4s var(--ease);
+    border-color 0.4s var(--ease);
+}
+
+[data-aesthetic="blueprint"] .switcher-dock {
+  right: clamp(20px, 3.4vw, 40px);
+  top: 66px;
 }
 
 [data-aesthetic="blueprint"] .switcher {
-  right: clamp(20px, 3.4vw, 40px);
-  top: 66px;
   border-radius: 3px;
   background: var(--surface);
 }
@@ -204,11 +217,13 @@ html[data-restoring] body {
 }
 
 @media (max-width: 720px) {
-  .switcher {
+  .switcher-dock {
     top: 56px;
+  }
+  .switcher {
     font-size: 10px;
   }
-  [data-aesthetic="blueprint"] .switcher {
+  [data-aesthetic="blueprint"] .switcher-dock {
     top: 52px;
   }
   /* Keep the noun, drop the verb: "aesthetics" still says what the two codes
@@ -344,5 +359,377 @@ html[data-restoring] body {
   }
   [data-transition] .portfolio-root {
     animation: none;
+  }
+}
+
+/* ---------- switcher pointer ----------
+   A small arrow under whichever identity you are not currently on. Placed by
+   measurement rather than by percentage, because "Signal" and "Blueprint" are
+   different widths and no fixed offset sits under both. */
+
+.switcher-point {
+  position: absolute;
+  /* Clears the tallest point of the hop. At 5px the arrow crossed back over the
+     switcher's bottom edge on every bounce, which read as a collision rather
+     than as a hop. */
+  top: calc(100% + 10px);
+  transform: translateX(-50%);
+  pointer-events: none;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1;
+  color: var(--accent);
+  animation: switcherPoint 1.9s var(--ease) infinite;
+}
+
+/* Two hops and a rest, forever. A single nudge is easy to miss in the corner
+   of an eye that is reading something else, and the whole job of this arrow is
+   to be caught by peripheral vision — so it keeps hopping rather than settling.
+   The rest between hops is what keeps that from reading as a rattle.
+
+   Transform only, so it composites and never touches layout. */
+@keyframes switcherPoint {
+  0%,
+  30%,
+  60%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+    opacity: 0.8;
+  }
+  15% {
+    transform: translateX(-50%) translateY(-7px);
+    opacity: 1;
+  }
+  45% {
+    transform: translateX(-50%) translateY(-4px);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .switcher-point {
+    animation: none;
+    opacity: 0.9;
+  }
+}
+
+/* ---------- jukebox ----------
+   A docked pill: cover art, what is playing, and the controls, with the track
+   list and the real player folded underneath. Bottom right, clear of Signal's
+   chapter rail and Blueprint's mobile bar. It renders collapsed and fetches
+   nothing until someone presses play. */
+
+.jukebox {
+  position: fixed;
+  z-index: 40;
+  right: clamp(20px, 4vw, 40px);
+  bottom: 60px;
+  width: 280px;
+  max-width: calc(100vw - 2 * clamp(20px, 4vw, 40px));
+  font-family: var(--font-mono);
+}
+
+[data-aesthetic="blueprint"] .jukebox {
+  right: clamp(20px, 3.4vw, 40px);
+}
+
+.jukebox__pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 8px 8px;
+  border: 1px solid var(--foreground);
+  background: var(--background);
+  transition:
+    background-color 0.4s var(--ease),
+    border-color 0.4s var(--ease);
+}
+
+[data-aesthetic="blueprint"] .jukebox__pill {
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+/* ---------- cover ---------- */
+
+.jukebox__cover {
+  position: relative;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--border);
+  background: var(--surface-alt);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+[data-aesthetic="blueprint"] .jukebox__cover {
+  border-radius: 50%;
+}
+
+.jukebox__art {
+  width: 100%;
+  height: 100%;
+  /* YouTube stills are 16:9 with letterboxing; cropping to the middle square
+     is what turns one into a cover. */
+  object-fit: cover;
+  transition: opacity 0.3s var(--ease);
+}
+
+.jukebox__cover:hover .jukebox__art {
+  opacity: 0.5;
+}
+
+.jukebox__cover-glyph {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  color: var(--foreground);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.jukebox__cover:disabled {
+  cursor: not-allowed;
+}
+
+.jukebox__cover:disabled .jukebox__art {
+  filter: grayscale(1);
+  opacity: 0.4;
+}
+
+/* The spin is the one piece of decoration here, and it earns its place by
+   saying "still playing" from the corner of the eye. */
+[data-aesthetic="blueprint"] .jukebox__cover .jukebox__art {
+  animation: jukeboxSpin 8s linear infinite;
+  animation-play-state: paused;
+}
+
+[data-aesthetic="blueprint"] .jukebox[data-open] .jukebox__cover .jukebox__art {
+  animation-play-state: running;
+}
+
+@keyframes jukeboxSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- meta ---------- */
+
+.jukebox__meta {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+
+.jukebox__title {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--foreground);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jukebox__artist {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--subtle);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ---------- controls ---------- */
+
+.jukebox__controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 0 0 auto;
+}
+
+.jukebox__button {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  cursor: pointer;
+  transition: color 0.25s var(--ease);
+}
+
+.jukebox__button:hover {
+  color: var(--accent);
+}
+
+.jukebox__chevron {
+  font-size: 9px;
+}
+
+/* ---------- panel ---------- */
+
+.jukebox__panel {
+  margin-top: 6px;
+  padding: 10px;
+  border: 1px solid var(--border-strong);
+  background: var(--background);
+}
+
+[data-aesthetic="blueprint"] .jukebox__panel {
+  border-radius: 6px;
+  background: var(--surface);
+}
+
+.jukebox__tracks {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.jukebox__track {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color 0.25s var(--ease),
+    color 0.25s var(--ease);
+}
+
+.jukebox__track:hover:not(:disabled) {
+  background: var(--surface-alt);
+  color: var(--foreground);
+}
+
+.jukebox__track[data-active] {
+  border-color: var(--accent);
+  color: var(--foreground);
+}
+
+.jukebox__track:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.jukebox__track-glyph {
+  flex: 0 0 auto;
+  width: 12px;
+  color: var(--accent);
+  font-size: 8px;
+  line-height: 1;
+}
+
+.jukebox__track-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.jukebox__track-title {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.jukebox__track-artist {
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--subtle);
+}
+
+/* The playback engine. Clipped, not hidden: a media element inside a
+   display:none subtree stops, so this has to stay a rendered, laid-out element
+   for the music to keep running while the track list is folded away. Empty and
+   weightless until a track is chosen, because nothing is fetched before then. */
+.jukebox__engine {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  pointer-events: none;
+}
+
+.jukebox__note {
+  margin: 10px 0 0;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--subtle);
+}
+
+@media (max-width: 720px) {
+  .jukebox {
+    bottom: 64px;
+    width: 250px;
+  }
+  .jukebox__cover {
+    width: 38px;
+    height: 38px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jukebox__art {
+    animation: none !important;
+  }
+}
+
+/* ---------- jukebox: docked into Signal's rail ----------
+   The player sits where the stack ticker used to scroll. It is positioned over
+   the rail rather than rendered inside it: the component lives in the root
+   layout so a track survives a route change, and a component in the layout
+   cannot be a child of a bar rendered by a page. */
+
+[data-aesthetic="signal"] .jukebox {
+  right: 0;
+  bottom: 0;
+  width: calc(272px + var(--sg-gutter, 40px));
+}
+
+[data-aesthetic="signal"] .jukebox__pill {
+  height: 44px;
+  padding: 0 clamp(20px, 4vw, 40px) 0 14px;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: transparent;
+}
+
+/* Under 1100px the rail takes its whole bar back, so the player lifts off it
+   and floats above, as it does in Blueprint. */
+@media (max-width: 1100px) {
+  [data-aesthetic="signal"] .jukebox {
+    right: clamp(20px, 4vw, 40px);
+    bottom: 56px;
+    width: 272px;
+  }
+  [data-aesthetic="signal"] .jukebox__pill {
+    height: auto;
+    padding: 8px 10px 8px 8px;
+    border: 1px solid var(--foreground);
+    background: var(--background);
   }
 }

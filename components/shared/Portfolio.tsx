@@ -1,6 +1,7 @@
 "use client";
 
 import { AestheticProvider, useAesthetic } from "@/lib/aesthetic-context";
+import { useHashLanding } from "@/lib/useHashLanding";
 import { useReducedMotion } from "@/lib/useReducedMotion";
 import { useSmoothScroll } from "@/lib/useSmoothScroll";
 import { useThemeColor } from "@/lib/useThemeColor";
@@ -14,6 +15,9 @@ function PortfolioBody() {
   const reduced = useReducedMotion();
   useSmoothScroll(!reduced);
   useThemeColor();
+  /* After `useSmoothScroll`, so Lenis is the thing doing the landing rather
+     than a native scroll it then has to be talked out of. */
+  useHashLanding();
 
   return (
     <>

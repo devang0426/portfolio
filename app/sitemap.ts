@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { about } from "@/data/about";
+import { HIRE_ROUTE } from "@/data/hire";
 import { projects } from "@/data/projects";
 import { site } from "@/data/site";
 
@@ -29,6 +30,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
           project.image ? [`${site.url}${project.image.src}`] : [],
         ),
       ],
+    },
+    // Unlike the section anchors above, this is a real second document with its
+    // own argument in it, so it earns its own row. Lower priority than the
+    // portfolio itself: it is the follow-up read, not the front door.
+    {
+      url: `${site.url}${HIRE_ROUTE}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
     // The CV is its own indexable URL. "<name> resume" is a query recruiters
     // genuinely run, and a PDF that only exists behind a click on the contact
