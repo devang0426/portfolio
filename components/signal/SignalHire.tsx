@@ -15,7 +15,7 @@ import { signalMotion } from "@/aesthetics/signal/animations";
 import { gsap } from "@/lib/gsap";
 import { useHireIntro } from "@/lib/useHireIntro";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
-import { scrollToY } from "@/lib/useSmoothScroll";
+import { nudgeIntoView } from "@/lib/useSmoothScroll";
 
 const copy = hire.signal;
 const intro = hire.intro.signal;
@@ -94,7 +94,7 @@ export function SignalHire() {
       // case where the eye already is. Focus goes with it, or the keyboard is
       // left behind on a control that is no longer the thing to do.
       root.focus({ preventScroll: true });
-      scrollToY(root.getBoundingClientRect().top + window.scrollY - 24);
+      nudgeIntoView(root);
     }
 
     return () => context.revert();
@@ -116,8 +116,6 @@ export function SignalHire() {
 
       <main id="main">
         <section className="sg-hire__intro" aria-labelledby="sg-hire-title">
-          <p className="sg-section-label">{copy.label}</p>
-
           <h1 id="sg-hire-title" className="sg-hire__title">
             {copy.lines.map((line, i) => (
               <span

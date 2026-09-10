@@ -16,7 +16,7 @@ import { useBlueprintStock } from "@/lib/blueprint-stock";
 import { gsap } from "@/lib/gsap";
 import { useHireIntro } from "@/lib/useHireIntro";
 import { useIsomorphicLayoutEffect } from "@/lib/useIsomorphicLayoutEffect";
-import { scrollToY } from "@/lib/useSmoothScroll";
+import { nudgeIntoView } from "@/lib/useSmoothScroll";
 
 const copy = hire.blueprint;
 const intro = hire.intro.blueprint;
@@ -95,7 +95,7 @@ export function BlueprintHire() {
       // The clip has just finished, so the sheet moves to the case and the
       // keyboard goes with it.
       root.focus({ preventScroll: true });
-      scrollToY(root.getBoundingClientRect().top + window.scrollY - 24);
+      nudgeIntoView(root);
     }
 
     return () => context.revert();
@@ -142,8 +142,6 @@ export function BlueprintHire() {
 
       <main id="main" className="bp-main">
         <section className="bp-hire__intro" aria-labelledby="bp-hire-title">
-          <p className="bp-figure-label">{copy.label}</p>
-
           <h1 id="bp-hire-title" className="bp-hire__title">
             {copy.title} <em className="bp-serif">{copy.accent}</em>.
           </h1>

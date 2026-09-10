@@ -25,6 +25,27 @@ export function scrollToY(y: number, immediate = false) {
   else window.scrollTo({ top: y, behavior: immediate ? "auto" : "smooth" });
 }
 
+/** How much of the element to leave showing at the foot of the viewport. */
+const PEEK = 200;
+
+/**
+ * Scroll just far enough that the top of `el` slides into the bottom of the
+ * viewport — a nudge, not a jump.
+ *
+ * The difference matters where something has just been revealed. Taking the
+ * reader all the way to the new content moves the page out from under them and
+ * hides where they were; showing the first slice of it says "there is more
+ * here" and leaves the reading to them, which is the thing a scroll cue is
+ * actually for.
+ *
+ * Never scrolls backwards: if the element is already well into view, this does
+ * nothing rather than dragging the page back up.
+ */
+export function nudgeIntoView(el: HTMLElement) {
+  const top = el.getBoundingClientRect().top + window.scrollY;
+  scrollToY(Math.max(window.scrollY, top - window.innerHeight + PEEK));
+}
+
 /**
  * Drives the page with Lenis and hands ScrollTrigger the same clock, so pinned
  * sections stay in lockstep with the smoothed scroll position. Disabled entirely
