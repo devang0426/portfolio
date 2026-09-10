@@ -39,12 +39,6 @@ export function AestheticSwitcher() {
       aria-label="Change your aesthetics"
       onKeyDown={onKeyDown}
     >
-      <span className="switcher__label" aria-hidden="true">
-        {/* Narrow screens keep the noun and drop the verb rather than dropping
-            the label outright, which left the signature control as two
-            unexplained codes. */}
-        <span className="switcher__label-verb">Change your </span>aesthetics
-      </span>
       {OPTIONS.map((option) => {
         const checked = option.value === selected;
         return (
