@@ -142,11 +142,16 @@ export function BlueprintHire() {
 
       <main id="main" className="bp-main">
         <section className="bp-hire__intro" aria-labelledby="bp-hire-title">
-          <h1 id="bp-hire-title" className="bp-hire__title">
-            {copy.title} <em className="bp-serif">{copy.accent}</em>.
-          </h1>
+          {/* One grid cell for the words, one for the clip: the title and lede
+              have to share a column or the intro grid puts the lede beside the
+              title and drops the video to a row of its own. */}
+          <div className="bp-hire__copy">
+            <h1 id="bp-hire-title" className="bp-hire__title">
+              {copy.title} <em className="bp-serif">{copy.accent}</em>.
+            </h1>
 
-          <p className="bp-hire__lede">{copy.lede}</p>
+            <p className="bp-hire__lede">{copy.lede}</p>
+          </div>
 
           <figure className="bp-hire__stage" data-status={status}>
             <video

@@ -116,22 +116,27 @@ export function SignalHire() {
 
       <main id="main">
         <section className="sg-hire__intro" aria-labelledby="sg-hire-title">
-          <h1 id="sg-hire-title" className="sg-hire__title">
-            {copy.lines.map((line, i) => (
-              <span
-                key={line}
-                className={
-                  i === copy.lines.length - 1
-                    ? "sg-hire__line sg-hire__line--outline"
-                    : "sg-hire__line"
-                }
-              >
-                {line}
-              </span>
-            ))}
-          </h1>
+          {/* One grid cell for the words, one for the clip: the title and lede
+              have to share a column or the intro grid puts the lede beside the
+              title and drops the video to a row of its own. */}
+          <div className="sg-hire__copy">
+            <h1 id="sg-hire-title" className="sg-hire__title">
+              {copy.lines.map((line, i) => (
+                <span
+                  key={line}
+                  className={
+                    i === copy.lines.length - 1
+                      ? "sg-hire__line sg-hire__line--outline"
+                      : "sg-hire__line"
+                  }
+                >
+                  {line}
+                </span>
+              ))}
+            </h1>
 
-          <p className="sg-hire__lede">{copy.lede}</p>
+            <p className="sg-hire__lede">{copy.lede}</p>
+          </div>
 
           <figure className="sg-hire__stage" data-status={status}>
             <video

@@ -1151,6 +1151,12 @@
   padding: 110px var(--bp-gutter) 70px;
 }
 
+/* The words' half of the intro grid. `min-width: 0` so the display title
+   can shrink with the column rather than push the clip out of it. */
+.bp-hire__copy {
+  min-width: 0;
+}
+
 .bp-hire__title {
   margin: 16px 0 0;
   font-family: var(--font-display);

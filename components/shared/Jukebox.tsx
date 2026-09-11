@@ -346,7 +346,7 @@ export function Jukebox() {
           {tracks.length > 1 ? (
             <button
               type="button"
-              className="jukebox__button"
+              className="jukebox__button jukebox__next"
               onClick={() => step(1)}
               aria-label={music.next}
             >

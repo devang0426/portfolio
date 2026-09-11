@@ -684,11 +684,31 @@ html[data-restoring] body {
 @media (max-width: 720px) {
   .jukebox {
     bottom: 64px;
-    width: 250px;
+    /* Sized by its contents now, not by a fixed slab. */
+    width: auto;
   }
+
+  /* Right-aligned so the collapsed pill hugs the corner while the panel below
+     it still gets a readable width. */
+  .jukebox__pill {
+    margin-left: auto;
+    width: max-content;
+  }
+
   .jukebox__cover {
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
+  }
+
+  /* Both live in the panel, a tap away, and neither is worth the width here. */
+  .jukebox__meta,
+  .jukebox__next {
+    display: none;
+  }
+
+  .jukebox__panel {
+    width: 250px;
+    margin-left: auto;
   }
 }
 
@@ -725,6 +745,12 @@ html[data-restoring] body {
     right: clamp(20px, 4vw, 40px);
     bottom: 56px;
     width: 272px;
+  }
+  /* Below 720px the compact rules take over and the slab width goes with them. */
+  @media (max-width: 720px) {
+    [data-aesthetic="signal"] .jukebox {
+      width: auto;
+    }
   }
   [data-aesthetic="signal"] .jukebox__pill {
     height: auto;

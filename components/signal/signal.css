@@ -1115,6 +1115,12 @@
   padding: clamp(96px, 14vh, 140px) var(--sg-gutter) clamp(48px, 8vh, 80px);
 }
 
+/* The words' half of the intro grid. `min-width: 0` so the display title
+   can shrink with the column rather than push the clip out of it. */
+.sg-hire__copy {
+  min-width: 0;
+}
+
 .sg-hire__title {
   margin: 18px 0 0;
   font-family: var(--font-display);
