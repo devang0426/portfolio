@@ -10,6 +10,7 @@ import {
   strengths,
   testimonialReady,
 } from "@/data/hire";
+import { faq } from "@/data/faq";
 import { site } from "@/data/site";
 import { signalMotion } from "@/aesthetics/signal/animations";
 import { gsap } from "@/lib/gsap";
@@ -20,9 +21,12 @@ import { nudgeIntoView } from "@/lib/useSmoothScroll";
 const copy = hire.signal;
 const intro = hire.intro.signal;
 const client = hire.client.signal;
+const questions = hire.faq.signal;
 
-/** The client section follows the strength groups, so it takes the next ordinal. */
+/** The client section follows the strength groups, so it takes the next
+    ordinal, and the questions take the one after that. */
 const clientNumber = String(strengths.length + 1).padStart(2, "0");
+const faqNumber = String(strengths.length + 2).padStart(2, "0");
 
 /** Signal numbers everything it sets, so the two groups carry ordinals too. */
 const numbered = strengths.map((group, index) => ({
@@ -86,6 +90,11 @@ export function SignalHire() {
           ".sg-hire__closer",
           { opacity: 0, y: travel, duration: enter, ease: gsapEase },
           "-=0.6",
+        )
+        .from(
+          ".sg-hire__faq-item",
+          { opacity: 0, y: travel, duration: enter, ease: gsapEase, stagger },
+          "-=0.4",
         );
     }, root);
 
@@ -345,6 +354,46 @@ export function SignalHire() {
               <Link href={WORK_ROUTE} className="sg-hero__cta sg-hero__cta--ghost">
                 {copy.closer.work}
               </Link>
+            </div>
+          </section>
+
+          {/* Native <details>: every answer is in the document whether or not
+              it is unfolded, which is what a crawler reads, and the toggle
+              costs no script. The first is open so the section reads as
+              answers rather than as a list of headings. */}
+          <section className="sg-hire__faq" aria-labelledby="sg-hire-faq">
+            <div className="sg-hire__group-head">
+              <p className="sg-section-label">
+                {faqNumber} — {questions.label}
+              </p>
+              <h2 id="sg-hire-faq" className="sg-hire__group-title">
+                {questions.lines.map((line) => (
+                  <span key={line} className="sg-hire__line">
+                    {line}
+                  </span>
+                ))}
+              </h2>
+            </div>
+
+            <p className="sg-hire__client-lede">{questions.lede}</p>
+
+            <div className="sg-hire__faq-list">
+              {faq.map((entry, index) => (
+                <details
+                  key={entry.id}
+                  className="sg-hire__faq-item"
+                  open={index === 0 || undefined}
+                >
+                  <summary className="sg-hire__faq-question">
+                    <span className="sg-hire__faq-number" aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="sg-hire__faq-text">{entry.question}</span>
+                    <span className="sg-hire__faq-mark" aria-hidden="true" />
+                  </summary>
+                  <p className="sg-hire__faq-answer">{entry.answer}</p>
+                </details>
+              ))}
             </div>
           </section>
         </div>

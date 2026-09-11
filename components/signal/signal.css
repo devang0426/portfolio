@@ -1360,7 +1360,8 @@
 /* ---------- closer ---------- */
 
 .sg-hire__closer {
-  padding: clamp(72px, 12vh, 120px) var(--sg-gutter) clamp(88px, 14vh, 140px);
+  padding: clamp(72px, 12vh, 120px) var(--sg-gutter);
+  border-bottom: 1px solid var(--border);
 }
 
 .sg-hire__closer-title {
@@ -1558,6 +1559,112 @@
 
 .sg-hire__quote-author::before {
   content: "— ";
+}
+
+/* ---------- questions ---------- */
+
+/* The last thing on the page now, so it carries the page's bottom padding. */
+.sg-hire__faq {
+  padding: clamp(56px, 9vh, 88px) var(--sg-gutter) clamp(88px, 14vh, 140px);
+}
+
+/* Ruled like the card grid: one border, shared, so the list reads as a single
+   plate rather than seven boxes. */
+.sg-hire__faq-list {
+  margin: clamp(28px, 4vh, 44px) 0 0;
+  border-top: 1px solid var(--border-strong);
+}
+
+.sg-hire__faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.sg-hire__faq-question {
+  display: grid;
+  /* A fixed first column so the answers below can share its left edge. */
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 18px;
+  padding: 22px 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(20px, 2.2vw, 28px);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  transition: color 0.28s var(--ease);
+}
+
+.sg-hire__faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.sg-hire__faq-question:hover {
+  color: var(--accent);
+}
+
+.sg-hire__faq-question:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.sg-hire__faq-number {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+}
+
+/* A plus that turns into a minus: two bars, one of which rotates away. */
+.sg-hire__faq-mark {
+  position: relative;
+  align-self: center;
+  width: 14px;
+  height: 14px;
+}
+
+.sg-hire__faq-mark::before,
+.sg-hire__faq-mark::after {
+  content: "";
+  position: absolute;
+  inset: 50% auto auto 0;
+  width: 14px;
+  height: 1.5px;
+  background: currentColor;
+  transform: translateY(-50%);
+  transition: transform 0.35s var(--ease);
+}
+
+.sg-hire__faq-mark::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.sg-hire__faq-item[open] .sg-hire__faq-mark::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.sg-hire__faq-answer {
+  margin: 0;
+  padding: 0 0 26px 46px;
+  max-width: 68ch;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+@media (max-width: 720px) {
+  .sg-hire__faq-question {
+    gap: 14px;
+    padding: 18px 0;
+    font-size: 19px;
+  }
+  .sg-hire__faq-answer {
+    padding-left: 0;
+    font-size: 15px;
+  }
 }
 
 @media (max-width: 720px) {

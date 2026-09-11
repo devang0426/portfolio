@@ -1398,7 +1398,7 @@
 /* ---------- closer ---------- */
 
 .bp-hire__closer {
-  padding: clamp(64px, 10vh, 100px) var(--bp-gutter) clamp(80px, 13vh, 120px);
+  padding: clamp(64px, 10vh, 100px) var(--bp-gutter);
   border-top: 1px solid var(--border);
 }
 
@@ -1551,6 +1551,96 @@
 
 /* Blueprint annotates rather than declaims: the quote is set in the serif that
    already carries every accent on this site, hung off a margin rule. */
+/* ---------- questions ---------- */
+
+/* The last thing on the sheet now, so it carries the page's bottom padding. */
+.bp-hire__faq {
+  padding: clamp(56px, 9vh, 88px) var(--bp-gutter) clamp(80px, 13vh, 120px);
+  border-top: 1px solid var(--border);
+}
+
+/* Drawn as one ruled sheet: a single top rule, then a hairline under each
+   entry, the way the timeline is ruled on the front page. */
+.bp-hire__faq-list {
+  margin: clamp(26px, 4vh, 40px) 0 0;
+  border-top: 1px solid var(--foreground);
+}
+
+.bp-hire__faq-item {
+  border-bottom: 1px solid var(--border);
+}
+
+.bp-hire__faq-question {
+  display: grid;
+  /* A fixed first column so the answers below can share its left edge. */
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 16px;
+  padding: 18px 0;
+  cursor: pointer;
+  list-style: none;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(17px, 1.8vw, 22px);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  transition: color 0.28s var(--ease);
+}
+
+.bp-hire__faq-question::-webkit-details-marker {
+  display: none;
+}
+
+.bp-hire__faq-question:hover {
+  color: var(--accent);
+}
+
+.bp-hire__faq-question:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.bp-hire__faq-number {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--muted);
+}
+
+.bp-hire__faq-mark {
+  align-self: center;
+  font-family: var(--font-mono);
+  font-size: 16px;
+  line-height: 1;
+  color: var(--muted);
+  transition: transform 0.35s var(--ease);
+}
+
+.bp-hire__faq-item[open] .bp-hire__faq-mark {
+  transform: rotate(45deg);
+}
+
+.bp-hire__faq-answer {
+  margin: 0;
+  padding: 0 0 22px 60px;
+  max-width: 66ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--body-ink);
+}
+
+@media (max-width: 720px) {
+  .bp-hire__faq-question {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: 12px;
+    padding: 16px 0;
+    font-size: 17px;
+  }
+  .bp-hire__faq-answer {
+    padding-left: 0;
+    font-size: 14px;
+  }
+}
+
 .bp-hire__quote {
   margin: clamp(26px, 4vh, 40px) 0 0;
   padding-left: clamp(18px, 2.6vw, 32px);

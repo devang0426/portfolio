@@ -242,6 +242,21 @@ export const hire = {
       scopeLabel: "scope",
     },
   },
+  /** The FAQ section's headings, in both voices. The questions themselves
+      live in `faq.ts`, since they are shared with the structured data. */
+  faq: {
+    signal: {
+      label: "Questions",
+      lines: ["Asked", "often."],
+      lede: "The things a recruiter or an answer engine wants to know, answered in one place so nobody has to guess.",
+    },
+    blueprint: {
+      label: "questions",
+      title: "Asked",
+      accent: "often",
+      lede: "The questions a recruiter — or an answer engine — tends to ask, answered in one place so nobody has to guess.",
+    },
+  },
   signal: {
     label: "",
     /** Split across lines the way Signal sets every display heading. */

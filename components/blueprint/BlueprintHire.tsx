@@ -10,6 +10,7 @@ import {
   strengths,
   testimonialReady,
 } from "@/data/hire";
+import { faq } from "@/data/faq";
 import { site } from "@/data/site";
 import { blueprintMotion } from "@/aesthetics/blueprint/animations";
 import { useBlueprintStock } from "@/lib/blueprint-stock";
@@ -21,9 +22,12 @@ import { nudgeIntoView } from "@/lib/useSmoothScroll";
 const copy = hire.blueprint;
 const intro = hire.intro.blueprint;
 const client = hire.client.blueprint;
+const questions = hire.faq.blueprint;
 
 /** The client sheet follows the two strength figures, so it takes the next one. */
 const clientNumber = String(strengths.length + 1).padStart(2, "0");
+/** And the questions the figure after that. */
+const faqNumber = String(strengths.length + 2).padStart(2, "0");
 
 /** Blueprint numbers by figure, and this sheet carries two of them. */
 const figures = strengths.map((group, index) => ({
@@ -88,6 +92,11 @@ export function BlueprintHire() {
           ".bp-hire__closer",
           { opacity: 0, y: travel, duration: enter, ease: gsapEase },
           "-=0.3",
+        )
+        .from(
+          ".bp-hire__faq-item",
+          { opacity: 0, y: travel, duration: enter, ease: gsapEase, stagger },
+          "-=0.4",
         );
     }, root);
 
@@ -357,6 +366,45 @@ export function BlueprintHire() {
               <Link href={WORK_ROUTE} className="bp-button bp-button--ghost">
                 {copy.closer.work}
               </Link>
+            </div>
+          </section>
+
+          {/* Native <details>: every answer is in the document whether or not
+              it is unfolded, which is what a crawler reads, and the toggle
+              costs no script. The first is open so the sheet reads as answers
+              rather than as an index. */}
+          <section className="bp-hire__faq" aria-labelledby="bp-hire-faq">
+            <div className="bp-hire__group-head">
+              <p className="bp-figure-label">
+                fig. {faqNumber} — {questions.label}
+              </p>
+              <h2 id="bp-hire-faq" className="bp-hire__group-title">
+                {questions.title}{" "}
+                <em className="bp-serif">{questions.accent}</em>.
+              </h2>
+            </div>
+
+            <p className="bp-hire__client-lede">{questions.lede}</p>
+
+            <div className="bp-hire__faq-list">
+              {faq.map((entry, index) => (
+                <details
+                  key={entry.id}
+                  className="bp-hire__faq-item"
+                  open={index === 0 || undefined}
+                >
+                  <summary className="bp-hire__faq-question">
+                    <span className="bp-hire__faq-number" aria-hidden="true">
+                      q.{String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="bp-hire__faq-text">{entry.question}</span>
+                    <span className="bp-hire__faq-mark" aria-hidden="true">
+                      +
+                    </span>
+                  </summary>
+                  <p className="bp-hire__faq-answer">{entry.answer}</p>
+                </details>
+              ))}
             </div>
           </section>
         </div>

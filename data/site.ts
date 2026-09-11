@@ -5,8 +5,8 @@ export const site = {
   initials: "DS",
   role: "Full-stack engineer",
   /**
-   * PLACEHOLDER — not a confirmed domain. Set this before the first real
-   * deploy; it is the highest-consequence line in the project.
+   * The deployed origin, `www` included — the apex is not the canonical host.
+   * This is the highest-consequence line in the project.
    *
    * It feeds `metadataBase`, the canonical link, every Open Graph and Twitter
    * tag, `robots.txt`, `sitemap.xml`, the résumé's public URL and all four
@@ -14,7 +14,7 @@ export const site = {
    * search engines at a host that does not exist, and a bad canonical is slow
    * to undo.
    */
-  url: "https://devangsharma.dev",
+  url: "https://www.devangsharma.me",
   location: "Jaipur, IN",
   coordinates: "26.9124° N, 75.7873° E",
   email: "devang2626@gmail.com",
